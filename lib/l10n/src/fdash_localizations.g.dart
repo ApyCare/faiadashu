@@ -11,6 +11,7 @@ import 'fdash_localizations_de.dart';
 import 'fdash_localizations_en.dart';
 import 'fdash_localizations_es.dart';
 import 'fdash_localizations_ja.dart';
+import 'fdash_localizations_fr.dart';
 
 /// Callers can lookup localized strings with an instance of FDashLocalizations returned
 /// by `FDashLocalizations.of(context)`.
@@ -100,7 +101,8 @@ abstract class FDashLocalizations {
     Locale('ar'),
     Locale('de'),
     Locale('es'),
-    Locale('ja')
+    Locale('ja'),
+    Locale('fr'),
   ];
 
   /// No description provided for @validatorRequiredItem.
@@ -385,8 +387,14 @@ class _FDashLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ar', 'de', 'en', 'es', 'ja'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+        'ar',
+        'de',
+        'en',
+        'es',
+        'ja',
+        'fr'
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FDashLocalizationsDelegate old) => false;
@@ -405,6 +413,8 @@ FDashLocalizations lookupFDashLocalizations(Locale locale) {
       return FDashLocalizationsEs();
     case 'ja':
       return FDashLocalizationsJa();
+    case 'fr':
+      return FDashLocalizationsFr();
   }
 
   throw FlutterError(

@@ -1,0 +1,118 @@
+{
+    "@@locale": "fr",
+    "validatorRequiredItem": "Cette question doit être complétée.",
+    "validatorMinLength": "{minLength, plural, =1 {Entrez au moins un caractère.} other {Entrez au moins {minLength} caractères.}}",
+    "@validatorMinLength": {
+        "placeholders": {
+            "minLength": {}
+        }
+    },
+    "validatorMaxLength": "{maxLength, plural, other{Entrez jusqu'à {maxLength} caractères.}}",
+    "@validatorMaxLength": {
+        "placeholders": {
+            "maxLength": {}
+        }
+    },
+    "validatorUrl": "Entrez une URL valide au format https://...",
+    "validatorRegExp": "Entrez une réponse valide.",
+    "validatorEntryFormat": "Entrez au format {entryFormat}.",
+    "@validatorEntryFormat": {
+        "placeholders": {
+            "entryFormat": {
+                "type": "String"
+            }
+        }
+    },
+    "validatorNan": "Entrez un nombre valide.",
+    "validatorMinValue": "Entrez un nombre de {minValue} ou plus.",
+    "@validatorMinValue": {
+        "placeholders": {
+            "minValue": {
+                "type": "String"
+            }
+        }
+    },
+    "validatorMaxValue": "Entrez un nombre jusqu'à {maxValue}.",
+    "@validatorMaxValue": {
+        "placeholders": {
+            "maxValue": {
+                "type": "String"
+            }
+        }
+    },
+    "dataAbsentReasonAskedDeclined": "Je choisis de ne pas répondre.",
+    "narrativePageTitle": "Narratif",
+    "questionnaireGenericTitle": "Questionnaire",
+    "questionnaireUnknownTitle": "Sans titre",
+    "questionnaireUnknownPublisher": "Éditeur inconnu",
+    "validatorDate": "Entrez une date valide.",
+    "validatorTime": "Entrez une heure valide.",
+    "validatorDateTime": "Entrez une date et une heure valides.",
+    "validatorMinOccurs": "{minOccurs, plural, =1 {Sélectionnez au moins une option.} other {Sélectionnez {minOccurs} options ou plus.}}",
+    "@validatorMinOccurs": {
+        "placeholders": {
+            "minOccurs": {}
+        }
+    },
+    "validatorMaxOccurs": "{maxOccurs, plural, =1 {Sélectionnez jusqu'à une option.} other {Sélectionnez jusqu'à {maxOccurs} options.}}",
+    "@validatorMaxOccurs": {
+        "placeholders": {
+            "maxOccurs": {}
+        }
+    },
+    "validatorSingleSelectionOrSingleOpenString": "Sélectionnez une option ou entrez du texte libre dans \"{openLabel}\".",
+    "@validatorSingleSelectionOrSingleOpenString": {
+        "placeholders": {
+            "openLabel": {}
+        }
+    },
+    "validatorMaxSize": "Sélectionnez un fichier de moins de {maxSize}.",
+    "@validatorMaxSize": {
+        "placeholders": {
+            "maxSize": {
+                "type": "String"
+            }
+        }
+    },
+    "validatorMimeTypes": "Sélectionnez un fichier des types suivants : {mimeTypes}.",
+    "@validatorMimeType": {
+        "placeholders": {
+            "mimeTypes": {
+                "type": "String"
+            }
+        }
+    },
+    "dataAbsentReasonAskedDeclinedInputLabel": "Je choisis de ne pas répondre.",
+    "dataAbsentReasonAskedDeclinedOutput": "A refusé de répondre",
+    "dataAbsentReasonAsTextOutput": "[COMME TEXTE]",
+    "autoCompleteSearchTermInput": "Entrez un terme de recherche...",
+    "responseStatusToCompleteButtonLabel": "Compléter",
+    "responseStatusToInProgressButtonLabel": "Modifier",
+    "progressQuestionnaireLoading": "Le questionnaire est en cours de chargement...",
+    "handlingSaveButtonLabel": "Enregistrer",
+    "handlingUploadButtonLabel": "Téléverser",
+    "handlingUploading": "Téléversement du questionnaire...",
+    "loginStatusLoggingIn": "Connexion en cours...",
+    "loginStatusLoggedIn": "Connecté...",
+    "loginStatusLoggingOut": "Déconnexion en cours...",
+    "loginStatusLoggedOut": "Déconnecté...",
+    "loginStatusUnknown": "Pas sûr de ce qui se passe ?",
+    "loginStatusError": "Quelque chose s'est mal passé.",
+    "handlingSaved": "Questionnaire enregistré.",
+    "handlingUploaded": "Questionnaire téléversé.",
+    "aggregationScore": "Score : {score}",
+    "@aggregationScore": {
+        "placeholders": {
+            "score": {}
+        }
+    },
+    "aggregationTotalScoreTitle": "Score Total",
+    "fillerOpenCodingOtherLabel": "Autre",
+    "fillerAddAnotherItemLabel": "Ajouter un autre \"{itemLabel}\"",
+    "@fillerAddAnotherItemLabel": {
+    "placeholders": {
+    "itemLabel": {}
+    }
+    },
+    "fillerExclusiveOptionLabel": "(exclusif)"
+    }
