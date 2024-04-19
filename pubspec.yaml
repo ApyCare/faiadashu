@@ -33,7 +33,7 @@ dependencies:
   filesize: ^2.0.1
   flutter:
     sdk: flutter
-  flutter_localization:
+  flutter_localizations:
     sdk: flutter
   intl: ^0.19.0
   logging: ^1.0.2
