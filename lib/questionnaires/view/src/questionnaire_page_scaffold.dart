@@ -57,8 +57,7 @@ class DefaultQuestionnairePageScaffoldBuilder
         ),
         title: Row(
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 200,
+            Expanded(
               child: Text(
                 questionnaire.title ??
                     FDashLocalizations.of(context).questionnaireGenericTitle,
@@ -66,7 +65,6 @@ class DefaultQuestionnairePageScaffoldBuilder
                 softWrap: true,
               ),
             ),
-            const Spacer(),
             IconButton(
               icon: const Icon(Icons.help_outline),
               onPressed: () {
