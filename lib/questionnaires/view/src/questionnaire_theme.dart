@@ -223,7 +223,8 @@ class QuestionnaireThemeData {
     this.groupItemLayoutBuilder = _defaultGroupItemLayoutBuilder,
     this.displayItemLayoutBuilder = _defaultDisplayItemLayoutBuilder,
     this.codingControlLayoutBuilder = _defaultCodingControlLayoutBuilder,
-    this.codingControlOptionTitleRenderer = _defaultCodingControlOptionTitleRenderer,
+    this.codingControlOptionTitleRenderer =
+        _defaultCodingControlOptionTitleRenderer,
     this.scrollerItemBuilder = _defaultScrollerItemBuilder,
     this.stepperQuestionnaireItemFiller =
         _defaultStepperQuestionnaireItemFiller,
@@ -291,26 +292,23 @@ class QuestionnaireThemeData {
         return TotalScoreItem(answerModel, key: key);
       }
 
-      if (answerModel is NumericalAnswerModel) {
-        return NumericalAnswerFiller(answerModel, key: key);
-      } else if (answerModel is StringAnswerModel) {
-        return StringAnswerFiller(answerModel, key: key);
-      } else if (answerModel is DateTimeAnswerModel) {
-        return DateTimeAnswerFiller(answerModel, key: key);
-      } else if (answerModel is CodingAnswerModel) {
-        return CodingAnswerFiller(answerModel, key: key);
-      } else if (answerModel is BooleanAnswerModel) {
-        return BooleanAnswerFiller(answerModel, key: key);
-      } else if (answerModel is AttachmentAnswerModel) {
-        return AttachmentAnswerFiller(answerModel, key: key);
-      } else if (answerModel is UnsupportedAnswerModel) {
-        throw QuestionnaireFormatException(
-          'Unsupported item type: ${answerModel.qi.type}',
-          answerModel.questionnaireItemModel.linkId,
-        );
-      } else {
-        throw QuestionnaireFormatException('Unknown AnswerModel: $answerModel');
-      }
+      return switch (answerModel.runtimeType) {
+        const (NumericalAnswerModel) =>
+          NumericalAnswerFiller(answerModel, key: key),
+        const (StringAnswerModel) => StringAnswerFiller(answerModel, key: key),
+        const (DateTimeAnswerModel) =>
+          DateTimeAnswerFiller(answerModel, key: key),
+        const (CodingAnswerModel) => CodingAnswerFiller(answerModel, key: key),
+        const (BooleanAnswerModel) =>
+          BooleanAnswerFiller(answerModel, key: key),
+        const (AttachmentAnswerModel) =>
+          AttachmentAnswerFiller(answerModel, key: key),
+        const (UnsupportedAnswerModel) => throw QuestionnaireFormatException(
+            'Unsupported item type: ${answerModel.qi.type}',
+            answerModel.questionnaireItemModel.linkId,
+          ),
+        _ => throw UnsupportedError('Unsupported AnswerModel: $answerModel'),
+      };
     } catch (exception) {
       _logger.warn('Cannot create answer filler:', error: exception);
 
