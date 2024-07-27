@@ -112,7 +112,7 @@ class CodingAnswerOptionModel {
         )
         ?.valueAttachment;
 
-    final ordinalValue = extensions
+    final ordinalValue = coding?.extension_
         ?.extensionOrNull(
           'http://hl7.org/fhir/StructureDefinition/ordinalValue',
         )

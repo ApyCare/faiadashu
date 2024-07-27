@@ -135,18 +135,30 @@ class QuestionnaireItemModel with Diagnosticable {
     // as there are also input fields (e.g. pain score) with unit {score}.
     return (questionnaireItem.type == QuestionnaireItemType.quantity ||
             questionnaireItem.type == QuestionnaireItemType.decimal) &&
-        ((questionnaireItem.readOnly == FhirBoolean(true) &&
-                questionnaireItem.computableUnit?.display == '{score}') ||
-            questionnaireItem.extension_
-                    ?.firstWhereOrNull(
-                      (ext) =>
-                          ext.url?.value.toString() ==
-                          calculatedExpressionExtensionUrl,
-                    )
-                    ?.valueExpression
-                    ?.name
-                    .toString() ==
-                'score');
+        enableScoreCalculation(questionnaireItem);
+  }
+
+  static bool enableScoreCalculation(QuestionnaireItem questionnaireItem) {
+    return containsScoreCode(questionnaireItem) ||
+        containsScoreExt(questionnaireItem);
+  }
+
+  static bool containsScoreCode(QuestionnaireItem questionnaireItem) {
+    return questionnaireItem.readOnly == FhirBoolean(true) &&
+        questionnaireItem.code?.any((code) => code.code?.value == "score") ==
+            true;
+  }
+
+  static bool containsScoreExt(QuestionnaireItem questionnaireItem) {
+    return questionnaireItem.extension_
+            ?.firstWhereOrNull(
+              (ext) =>
+                  ext.url?.value.toString() == calculatedExpressionExtensionUrl,
+            )
+            ?.valueExpression
+            ?.name
+            .toString() ==
+        'score';
   }
 
   static const String calculatedExpressionExtensionUrl =
@@ -268,7 +280,9 @@ class QuestionnaireItemModel with Diagnosticable {
   /// The name of a section, the text of a question or text content for a display item.
   RenderingString? get text {
     final plainText = questionnaireItem.text?.translate(
-        questionnaireItem.textElement?.extension_, questionnaireModel.locale,);
+      questionnaireItem.textElement?.extension_,
+      questionnaireModel.locale,
+    );
 
     return (plainText != null)
         ? RenderingString.fromText(

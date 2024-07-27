@@ -69,7 +69,7 @@ class _TotalScoreItemState extends State<TotalScoreItem> {
     _logger.debug('calculated result: $calcResult');
   }
 
-  final _nullExtension = FhirExtension();
+  final _nullExtension = const FhirExtension();
 
   /// Return a feedback string according to the Danish eHealth Sundhed DK spec.
   String? findDanishFeedback(int? score) {
