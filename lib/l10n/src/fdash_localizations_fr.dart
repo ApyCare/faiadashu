@@ -99,7 +99,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
 
   @override
   String validatorSingleSelectionOrSingleOpenString(Object openLabel) {
-    return 'Sélectionnez une option ou entrez du texte libre dans \"$openLabel\".';
+    return 'Sélectionnez une option ou entrez du texte libre dans "${openLabel}".';
   }
 
   @override
@@ -179,7 +179,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
 
   @override
   String fillerAddAnotherItemLabel(Object itemLabel) {
-    return 'Ajouter un autre \"$itemLabel\"';
+    return 'Ajouter un autre "${itemLabel}"';
   }
 
   @override

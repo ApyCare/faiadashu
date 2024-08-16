@@ -22,6 +22,7 @@ class QuestionnaireStepperPageView extends StatefulWidget {
         _QuestionnaireStepperPageViewInheritedWidget>();
     assert(result != null,
         'No QuestionnaireStepperInheritedWidget found in context',);
+
     return result!.data;
   }
 
@@ -66,9 +67,11 @@ class _QuestionnaireStepperPageViewState
         nextPageFillerItem?.fillerItemModel,
       );
       _hasRequestsRunning = false;
+
       return data ?? defaultData;
     }
     _hasRequestsRunning = false;
+
     return defaultData;
   }
 
