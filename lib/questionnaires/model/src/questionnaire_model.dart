@@ -45,7 +45,7 @@ class QuestionnaireModel {
   // Careful: _buildOrderedItems uses both to ensure the proper order of items!
 
   /// Maps linkId to [QuestionnaireItemModel]
-  final _cachedItems = <String, QuestionnaireItemModel>{};
+  final cachedItems = <String, QuestionnaireItemModel>{};
   final _orderedItems = <String, QuestionnaireItemModel>{};
 
   /// Direct access to [FhirResourceProvider]s for special use-cases.
@@ -361,7 +361,7 @@ class QuestionnaireModel {
     QuestionnaireItemModel? parent,
     int level,
   ) {
-    return _cachedItems.putIfAbsent(
+    return cachedItems.putIfAbsent(
       linkId,
       () => QuestionnaireItemModel(
         this,

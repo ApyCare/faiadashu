@@ -1,5 +1,6 @@
 import 'package:faiadashu/l10n/l10n.dart';
 import 'package:faiadashu/questionnaires/questionnaires.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Builder class to create a wrapper around a questionnaire filler.
@@ -83,7 +84,7 @@ class DefaultQuestionnairePageScaffoldBuilder
           ],
         ),
       ),
-      endDrawer: const NarrativeDrawer(),
+      endDrawer: kIsWeb ? const NarrativeDrawer() : null,
       floatingActionButton: floatingActionButton,
       persistentFooterButtons: persistentFooterButtons,
       body: SafeArea(child: child),

@@ -353,6 +353,12 @@ class QuestionnaireItemModel with Diagnosticable {
     properties.add(IntProperty('level', level));
   }
 
+  /// Overrides the default equality check to compare the [linkId] of the items.
+  @override
+  bool operator ==(Object other) {
+    return other is QuestionnaireItemModel && other.linkId == linkId;
+  }
+
   QuestionnaireItemModel(
     this.questionnaireModel,
     this.questionnaireItem,
@@ -360,4 +366,8 @@ class QuestionnaireItemModel with Diagnosticable {
     this.parent,
     this.level,
   );
+
+  @override
+  int get hashCode => linkId.hashCode;
+
 }
