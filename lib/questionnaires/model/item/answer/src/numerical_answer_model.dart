@@ -142,7 +142,6 @@ class NumericalAnswerModel extends AnswerModel<String, Quantity> {
     switch (qi.type) {
       case QuestionnaireItemType.integer:
         _maxDecimal = 0;
-        break;
       case QuestionnaireItemType.decimal:
       case QuestionnaireItemType.quantity:
         // TODO: Evaluate special extensions for quantities
@@ -153,7 +152,6 @@ class NumericalAnswerModel extends AnswerModel<String, Quantity> {
                 ?.valueInteger
                 ?.value ??
             modelDefaults.maxDecimal;
-        break;
       default:
         throw StateError('item.type cannot be ${qi.type}');
     }

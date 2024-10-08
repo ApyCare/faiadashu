@@ -280,17 +280,14 @@ abstract class FillerItemModel extends ResponseNode {
       switch (qew.operator_) {
         case QuestionnaireEnableWhenOperator.exists:
           _evaluateExistsOperator(qew, enableWhenTrigger);
-          break;
         case QuestionnaireEnableWhenOperator.equals:
         case QuestionnaireEnableWhenOperator.notEquals:
           _evaluateEqualityOperator(questionLinkId, qew, enableWhenTrigger);
-          break;
         case QuestionnaireEnableWhenOperator.lessThan:
         case QuestionnaireEnableWhenOperator.greaterThan:
         case QuestionnaireEnableWhenOperator.greaterThanOrEquals:
         case QuestionnaireEnableWhenOperator.lessThanOrEquals:
           _evaluateComparisonOperator(questionLinkId, qew, enableWhenTrigger);
-          break;
         default:
           _fimLogger.warn('Unsupported operator: ${qew.operator_}.');
           // Err on the side of caution: Enable fields when enableWhen cannot be evaluated.
@@ -306,12 +303,10 @@ abstract class FillerItemModel extends ResponseNode {
         if (!enableWhenTrigger.anyTriggered) {
           _nextGenerationDisableWithDescendants();
         }
-        break;
       case QuestionnaireItemEnableBehavior.all:
         if (!enableWhenTrigger.allTriggered) {
           _nextGenerationDisableWithDescendants();
         }
-        break;
       case QuestionnaireItemEnableBehavior.unknown:
         throw QuestionnaireFormatException(
           'enableWhen with unknown enableBehavior: ${questionnaireItem.enableBehavior}',
@@ -364,22 +359,18 @@ abstract class FillerItemModel extends ResponseNode {
             if (answerValue > comparisonValue) {
               enableWhenTrigger.trigger();
             }
-            break;
           case QuestionnaireEnableWhenOperator.greaterThanOrEquals:
             if (answerValue >= comparisonValue) {
               enableWhenTrigger.trigger();
             }
-            break;
           case QuestionnaireEnableWhenOperator.lessThan:
             if (answerValue < comparisonValue) {
               enableWhenTrigger.trigger();
             }
-            break;
           case QuestionnaireEnableWhenOperator.lessThanOrEquals:
             if (answerValue <= comparisonValue) {
               enableWhenTrigger.trigger();
             }
-            break;
           default:
             _fimLogger.warn(
               'Unexpected operator: ${qew.operator_} at $questionLinkId.',
@@ -555,16 +546,13 @@ abstract class FillerItemModel extends ResponseNode {
         case QuestionnaireDisabledDisplay.hidden:
           resultVisibility =
               _maxVisibility(resultVisibility, DisplayVisibility.hidden);
-          break;
         case QuestionnaireDisabledDisplay.protected:
           resultVisibility =
               _maxVisibility(resultVisibility, DisplayVisibility.protected);
-          break;
         case QuestionnaireDisabledDisplay.protectedNonEmpty:
           resultVisibility = isPopulated
               ? _maxVisibility(resultVisibility, DisplayVisibility.protected)
               : _maxVisibility(resultVisibility, DisplayVisibility.hidden);
-          break;
       }
     }
 

@@ -13,7 +13,7 @@ class NarrativeAggregator extends Aggregator<Narrative> {
   // Cached narrative
   Narrative? _narrative;
 
-  static final emptyNarrative = Narrative(
+  static const emptyNarrative = Narrative(
     div: '<div xmlns="http://www.w3.org/1999/xhtml"></div>',
     status: NarrativeStatus.empty,
   );

@@ -107,7 +107,7 @@ class DateTimeAnswerModel extends AnswerModel<FhirDateTime, FhirDateTime> {
     } else if (itemType == QuestionnaireItemType.time) {
       return QuestionnaireResponseAnswer(
         valueTime: FhirTime(
-          value!.value!.toIso8601String().substring('yyyy-MM-ddT'.length),
+          value!.value.toIso8601String().substring('yyyy-MM-ddT'.length),
         ),
         item: items,
       );
@@ -131,8 +131,8 @@ class DateTimeAnswerModel extends AnswerModel<FhirDateTime, FhirDateTime> {
     final minDateTime = _toDateTime(minValue);
     final maxDateTime = _toDateTime(maxValue);
 
-    if (minDateTime != null && inValue < minDateTime) return MinValueError(nodeUid, _formatValue(minValue));
-    if (maxDateTime != null && inValue > maxDateTime) return MaxValueError(nodeUid, _formatValue(maxValue));
+    if (minDateTime != null && inValue < minDateTime == true) return MinValueError(nodeUid, _formatValue(minValue));
+    if (maxDateTime != null && inValue > maxDateTime == true) return MaxValueError(nodeUid, _formatValue(maxValue));
 
     return null;
   }

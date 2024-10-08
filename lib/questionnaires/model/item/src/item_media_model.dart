@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:faiadashu/questionnaires/model/model.dart';
 import 'package:faiadashu/resource_provider/resource_provider.dart';
 import 'package:fhir/r4/general_types/general_types.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 
 /// Represents an itemMedia, or itemAnswerMedia.
 @immutable

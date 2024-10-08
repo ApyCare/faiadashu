@@ -262,14 +262,12 @@ class _JsonViewerGenericNode extends StatelessWidget {
       color = themeData.colorScheme.error;
     } else {
       switch (nodeValue.runtimeType) {
-        case bool:
+        case const (bool):
           color = (nodeValue as bool)
               ? themeData.colorScheme.secondary
               : themeData.colorScheme.error;
-          break;
-        case int:
+        case const (int):
           color = themeData.colorScheme.secondary;
-          break;
       }
     }
 

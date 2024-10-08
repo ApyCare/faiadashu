@@ -23,20 +23,17 @@ extension FDashDateExtension on FhirDate {
     final localeCode = locale.toString();
     final DateFormat dateFormat;
     switch (precision) {
-      case DatePrecision.YYYY:
+      case DateTimePrecision.yyyy:
         dateFormat = DateFormat.y(localeCode);
-        break;
-      case DatePrecision.YYYYMM:
+      case DateTimePrecision.yyyy_MM:
         dateFormat = DateFormat.yM(localeCode);
-        break;
-      case DatePrecision.YYYYMMDD:
+      case DateTimePrecision.yyyy_MM_dd:
         dateFormat = DateFormat.yMd(localeCode);
-        break;
       default:
         return defaultText;
     }
 
-    return dateFormat.format(value!);
+    return dateFormat.format(value);
   }
 }
 
@@ -46,33 +43,31 @@ extension FDashDateTimeExtension on FhirDateTime {
     final DateFormat dateFormat;
     final japanese = locale.languageCode == 'ja';
     switch (precision) {
-      case DateTimePrecision.INVALID:
+      case DateTimePrecision.invalid:
         return defaultText;
-      case DateTimePrecision.FULL:
+      case DateTimePrecision.dateTime:
         dateFormat = (!japanese)
             ? DateFormat.yMd(localeCode).add_jm()
             : DateFormat('y年M月d日', localeCode).add_jm();
-        break;
-      case DateTimePrecision.YYYY:
+      case DateTimePrecision.yyyy:
         dateFormat = (!japanese)
             ? DateFormat.y(localeCode)
             : DateFormat('y年', localeCode);
-        break;
-      case DateTimePrecision.YYYYMM:
+      case DateTimePrecision.yyyy_MM:
         dateFormat = (!japanese)
             ? DateFormat.yM(localeCode)
             : DateFormat('y年M月', localeCode);
-        break;
-      case DateTimePrecision.YYYYMMDD:
+      case DateTimePrecision.yyyy_MM_dd:
         dateFormat = (!japanese)
             ? DateFormat.yMd(localeCode)
             : DateFormat('y年M月d日', localeCode);
-        break;
+      default:
+        return defaultText;
     }
 
     // Dart only supports UTC or local times, even if the value is parsed from a
     // datetime string with time zone info.
-    final localDateTime = value!.toLocal();
+    final localDateTime = value.toLocal();
     final formattedValue = dateFormat.format(localDateTime);
 
     return withTimeZone

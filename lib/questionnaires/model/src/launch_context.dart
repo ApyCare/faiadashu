@@ -1,5 +1,5 @@
 import 'package:fhir/r4.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/widgets.dart';
 
 /// The standard context for Questionnaire at launch time
 @immutable

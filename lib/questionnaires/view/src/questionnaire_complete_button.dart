@@ -33,9 +33,9 @@ class _QuestionnaireCompleteButtonState
             notifyListeners: true,
           );
           qrm.invalidityNotifier.value = {
-            for (var validation in validationErrors)
+            for (final validation in validationErrors)
               validation.nodeUid:
-                  validation.getMessage(FDashLocalizations.of(context)) ?? ""
+                  validation.getMessage(FDashLocalizations.of(context)) ?? "",
           };
 
           if (validationErrors.isNotEmpty) {

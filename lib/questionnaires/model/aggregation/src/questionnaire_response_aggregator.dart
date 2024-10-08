@@ -16,7 +16,7 @@ class QuestionnaireResponseAggregator
 
   QuestionnaireResponseAggregator({required FDashLocalizations localizations})
       : super(
-          QuestionnaireResponse(),
+          const QuestionnaireResponse(),
           localizations: localizations,
           autoAggregate: false,
         );

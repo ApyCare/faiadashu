@@ -275,28 +275,22 @@ class QuestionItemModel extends ResponseItemModel {
       case QuestionnaireItemType.choice:
       case QuestionnaireItemType.openChoice:
         answerModel = CodingAnswerModel(this);
-        break;
       case QuestionnaireItemType.quantity:
       case QuestionnaireItemType.decimal:
       case QuestionnaireItemType.integer:
         answerModel = NumericalAnswerModel(this);
-        break;
       case QuestionnaireItemType.string:
       case QuestionnaireItemType.text:
       case QuestionnaireItemType.url:
         answerModel = StringAnswerModel(this);
-        break;
       case QuestionnaireItemType.date:
       case QuestionnaireItemType.dateTime:
       case QuestionnaireItemType.time:
         answerModel = DateTimeAnswerModel(this);
-        break;
       case QuestionnaireItemType.boolean:
         answerModel = BooleanAnswerModel(this);
-        break;
       case QuestionnaireItemType.attachment:
         answerModel = AttachmentAnswerModel(this);
-        break;
       case QuestionnaireItemType.display:
         throw UnsupportedError("Items of type 'display' do not have answers.");
       case QuestionnaireItemType.group:
@@ -339,23 +333,17 @@ class QuestionItemModel extends ResponseItemModel {
           case QuestionnaireItemType.integer:
             firstAnswerModel
                 .populateFromExpression(initialValue.valueInteger?.value);
-            break;
           case QuestionnaireItemType.decimal:
             firstAnswerModel
                 .populateFromExpression(initialValue.valueDecimal?.value);
-            break;
           case QuestionnaireItemType.string:
             firstAnswerModel.populateFromExpression(initialValue.valueString);
-            break;
           case QuestionnaireItemType.date:
             firstAnswerModel.populateFromExpression(initialValue.valueDate);
-            break;
           case QuestionnaireItemType.dateTime:
             firstAnswerModel.populateFromExpression(initialValue.valueDateTime);
-            break;
           case QuestionnaireItemType.boolean:
             firstAnswerModel.populateFromExpression(initialValue.valueBoolean);
-            break;
           case QuestionnaireItemType.choice:
           case QuestionnaireItemType.openChoice:
             final initialCodings = initialValues
@@ -368,7 +356,6 @@ class QuestionItemModel extends ResponseItemModel {
 
             (firstAnswerModel as CodingAnswerModel)
                 .populateFromCodings(initialCodings, initialOpenTexts);
-            break;
           default:
             // TODO: Implement for more types
             _qimLogger.warn(
