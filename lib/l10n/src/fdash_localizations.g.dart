@@ -237,6 +237,8 @@ abstract class FDashLocalizations {
   /// **'Select a file of the following types: {mimeTypes}.'**
   String validatorMimeTypes(String mimeTypes);
 
+  String errorWrongQuizResponse();
+
   /// No description provided for @dataAbsentReasonAskedDeclinedInputLabel.
   ///
   /// In en, this message translates to:
