@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:faiadashu/faiadashu.dart';
 import 'package:faiadashu/questionnaires/model/src/validation_errors/common_validation_error.dart';
 import 'package:faiadashu/questionnaires/model/src/validation_errors/validation_error.dart';
+import 'package:faiadashu/questionnaires/model/src/validation_errors/wrong_quiz_response_error.dart';
 import 'package:fhir/primitive_types/primitive_types.dart';
 import 'package:fhir/r4/r4.dart';
 import 'package:fhir_path/fhir_path.dart';
@@ -183,7 +184,9 @@ class QuestionItemModel extends ResponseItemModel {
       notifyListeners: notifyListeners,
     );
 
+    final currentAnswer = firstAnswerModel;
     for (final am in answerModels) {
+      _checkWrongResponse(am, currentAnswer);
       final amErrors = am.validate(
         updateErrorText: updateErrorText,
         notifyListeners: notifyListeners,
@@ -192,6 +195,20 @@ class QuestionItemModel extends ResponseItemModel {
     }
 
     return errors;
+  }
+
+  /// Check if this question is a quiz (has 1 answer with a score, total == 1),
+  /// or if it's a questionnaire (total > 1).
+  void _checkWrongResponse(AnswerModel<dynamic, dynamic> am, AnswerModel<dynamic, dynamic> currentAnswer) {
+    if (am is CodingAnswerModel && currentAnswer is CodingAnswerModel) {
+      final double totalScoreOfQuestion = am.answerOptions
+          .where((option) => option.fhirOrdinalValue != null)
+          .fold(0, (sum, option) => sum + option.fhirOrdinalValue!.value!);
+
+      if (totalScoreOfQuestion == 1 && currentAnswer.answerOptionByUidOrNull(am.singleSelectionUid)?.fhirOrdinalValue != FhirDecimal(1)) {
+        super.validationError = WrongQuizResponseError(nodeUid);
+      }
+    }
   }
 
   @override

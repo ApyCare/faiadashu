@@ -184,4 +184,7 @@ class FDashLocalizationsAr extends FDashLocalizations {
 
   @override
   String get fillerExclusiveOptionLabel => '(exclusive)';
+
+  @override
+  String errorWrongQuizResponse() => 'The response is incorrect.';
 }
