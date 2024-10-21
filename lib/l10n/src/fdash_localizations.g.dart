@@ -93,8 +93,8 @@ abstract class FDashLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('en'),
-    Locale('fr'),
+    Locale('fr', 'FR'),
+    Locale('en', 'US'),
   ];
 
   /// No description provided for @validatorRequiredItem.
