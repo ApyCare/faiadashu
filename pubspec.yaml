@@ -1,7 +1,7 @@
 name: faiadashu
 description: Faiadashu FHIRDash - Build beautiful healthcare apps fast — use the Flutter™ SDK and follow the HL7® FHIR® standard.
 
-version: 0.11.9
+version: 0.11.10
 publish_to: 'none'
 
 environment:

@@ -98,10 +98,6 @@ abstract class FDashLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('ar'),
-    Locale('de'),
-    Locale('es'),
-    Locale('ja'),
     Locale('fr'),
   ];
 
@@ -390,11 +386,7 @@ class _FDashLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'ar',
-        'de',
         'en',
-        'es',
-        'ja',
         'fr'
       ].contains(locale.languageCode);
 
@@ -405,16 +397,8 @@ class _FDashLocalizationsDelegate
 FDashLocalizations lookupFDashLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar':
-      return FDashLocalizationsAr();
-    case 'de':
-      return FDashLocalizationsDe();
     case 'en':
       return FDashLocalizationsEn();
-    case 'es':
-      return FDashLocalizationsEs();
-    case 'ja':
-      return FDashLocalizationsJa();
     case 'fr':
       return FDashLocalizationsFr();
   }
