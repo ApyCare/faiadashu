@@ -76,12 +76,17 @@ class _ProgressPainter extends CustomPainter {
       _inactive,
     );
 
+    final sweepAngle = doublePi / colors.length;
+
+    /// If any of the colors is null, the progress is not completed.
+    /// This is used to determine the color of the progress.
+    /// Red if not completed, green if completed.
+    final notCompleted = colors.any((c) => c == null);
+
     final paint = Paint()
-      ..color = Colors.pink
+      ..color = notCompleted ? Colors.pink : Colors.green
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
-
-    final sweepAngle = doublePi / colors.length;
 
     colors.forEachIndexed((i, sweepColor) {
       if (sweepColor != null) {

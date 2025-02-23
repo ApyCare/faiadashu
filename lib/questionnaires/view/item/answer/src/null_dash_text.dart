@@ -14,7 +14,7 @@ class NullDashText extends StatelessWidget {
                 .textTheme
                 .bodyMedium!
                 .color!
-                .withOpacity(variant600Opacity),
+                .withValues(alpha: variant600Opacity),
           ),
     );
   }

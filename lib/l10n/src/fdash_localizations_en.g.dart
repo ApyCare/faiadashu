@@ -1,35 +1,40 @@
 // ignore_for_file: avoid_escaping_inner_quotes, unnecessary_brace_in_string_interps, unnecessary_string_escapes, always_use_package_imports
 
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'fdash_localizations.g.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for English (`en`).
 class FDashLocalizationsEn extends FDashLocalizations {
-  FDashLocalizationsEn([super.locale = 'en']);
-
-  @override
-  String errorWrongQuizResponse() => 'The response is incorrect.';
+  FDashLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get validatorRequiredItem => 'This question needs to be completed.';
 
   @override
+  String errorWrongQuizResponse() => 'The response is incorrect.';
+
+  @override
   String validatorMinLength(num minLength) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       minLength,
       locale: localeName,
-      one: 'Enter at least one character.',
       other: 'Enter at least $minLength characters.',
+      one: 'Enter at least one character.',
     );
+    return '$_temp0';
   }
 
   @override
   String validatorMaxLength(num maxLength) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       maxLength,
       locale: localeName,
       other: 'Enter up to $maxLength characters.',
     );
+    return '$_temp0';
   }
 
   @override
@@ -48,12 +53,12 @@ class FDashLocalizationsEn extends FDashLocalizations {
 
   @override
   String validatorMinValue(String minValue) {
-    return 'Enter a value of $minValue or higher.';
+    return 'Enter a number of $minValue or higher.';
   }
 
   @override
   String validatorMaxValue(String maxValue) {
-    return 'Enter a value up to $maxValue.';
+    return 'Enter a number up to $maxValue.';
   }
 
   @override
@@ -82,22 +87,24 @@ class FDashLocalizationsEn extends FDashLocalizations {
 
   @override
   String validatorMinOccurs(num minOccurs) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       minOccurs,
       locale: localeName,
-      one: 'Select at least one option.',
       other: 'Select $minOccurs or more options.',
+      one: 'Select at least one option.',
     );
+    return '$_temp0';
   }
 
   @override
   String validatorMaxOccurs(num maxOccurs) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       maxOccurs,
       locale: localeName,
-      one: 'Select up to one option.',
       other: 'Select up to $maxOccurs options.',
+      one: 'Select up to one option.',
     );
+    return '$_temp0';
   }
 
   @override
@@ -116,8 +123,7 @@ class FDashLocalizationsEn extends FDashLocalizations {
   }
 
   @override
-  String get dataAbsentReasonAskedDeclinedInputLabel =>
-      'I choose not to answer.';
+  String get dataAbsentReasonAskedDeclinedInputLabel => 'I choose not to answer.';
 
   @override
   String get dataAbsentReasonAskedDeclinedOutput => 'Declined to answer';

@@ -34,9 +34,12 @@ class QuestionnaireItemFillerTitle extends StatelessWidget {
       final leading =
           _QuestionnaireItemFillerTitleLeading.fromFillerItem(fillerItem);
       final help = _createHelp(questionnaireItemModel);
-      final media = ItemMediaImage.fromItemMedia(questionnaireItemModel.itemMedia);
+      final media =
+          ItemMediaImage.fromItemMedia(questionnaireItemModel.itemMedia);
 
-      final htmlTitleText = questionnaireTheme.fillerItemHtmlTitleRenderer(fillerItem: fillerItem);
+      final htmlTitleText = questionnaireTheme.fillerItemHtmlTitleRenderer(
+        fillerItem: fillerItem,
+      );
 
       return QuestionnaireItemFillerTitle._(
         questionnaireItemModel: questionnaireItemModel,
@@ -196,14 +199,13 @@ class _QuestionnaireItemFillerSupportLink extends StatelessWidget {
 
 class _QuestionnaireItemFillerTitleLeading extends StatelessWidget {
   final Widget _leadingWidget;
+
   const _QuestionnaireItemFillerTitleLeading._(Widget leadingWidget)
       : _leadingWidget = leadingWidget;
 
   static Widget? fromFillerItem(
-    FillerItemModel fillerItemModel, {
-    // ignore: unused_element
-    Key? key,
-  }) {
+    FillerItemModel fillerItemModel,
+  ) {
     final displayCategory = fillerItemModel.questionnaireItem.extension_
         ?.extensionOrNull(
           'http://hl7.org/fhir/StructureDefinition/questionnaire-displayCategory',

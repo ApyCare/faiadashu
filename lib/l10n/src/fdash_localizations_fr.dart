@@ -14,7 +14,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
   String errorWrongQuizResponse() => 'La réponse est incorrecte.';
 
   @override
-  String validatorMinLength(int minLength) {
+  String validatorMinLength(num minLength) {
     return intl.Intl.pluralLogic(
       minLength,
       locale: localeName,
@@ -24,7 +24,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
   }
 
   @override
-  String validatorMaxLength(int maxLength) {
+  String validatorMaxLength(num maxLength) {
     return intl.Intl.pluralLogic(
       maxLength,
       locale: localeName,
@@ -81,7 +81,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
   String get validatorDateTime => 'Entrez une date et une heure valides.';
 
   @override
-  String validatorMinOccurs(int minOccurs) {
+  String validatorMinOccurs(num minOccurs) {
     return intl.Intl.pluralLogic(
       minOccurs,
       locale: localeName,
@@ -91,7 +91,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
   }
 
   @override
-  String validatorMaxOccurs(int maxOccurs) {
+  String validatorMaxOccurs(num maxOccurs) {
     return intl.Intl.pluralLogic(
       maxOccurs,
       locale: localeName,
@@ -111,7 +111,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
   }
 
   @override
-  String validatorMimeTypes(String mimeTypes) {
+  String validatorMimeTypes(Object mimeTypes) {
     return 'Sélectionnez un fichier des types suivants : $mimeTypes.';
   }
 

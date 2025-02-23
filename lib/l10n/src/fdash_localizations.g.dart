@@ -9,14 +9,16 @@ import 'package:intl/intl.dart' as intl;
 import 'fdash_localizations_en.dart';
 import 'fdash_localizations_fr.dart';
 
-/// Callers can lookup localized strings with an instance of FDashLocalizations returned
-/// by `FDashLocalizations.of(context)`.
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of FDashLocalizations
+/// returned by `FDashLocalizations.of(context)`.
 ///
 /// Applications need to include `FDashLocalizations.delegate()` in their app's
-/// localizationDelegates list, and the locales they support in the app's
-/// supportedLocales list. For example:
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
 ///
-/// ```
+/// ```dart
 /// import 'src/fdash_localizations.g.dart';
 ///
 /// return MaterialApp(
@@ -31,14 +33,14 @@ import 'fdash_localizations_fr.dart';
 /// Please make sure to update your pubspec.yaml to include the following
 /// packages:
 ///
-/// ```
+/// ```yaml
 /// dependencies:
 ///   # Internationalization support.
 ///   flutter_localizations:
 ///     sdk: flutter
 ///   intl: any # Use the pinned version from flutter_localizations
 ///
-///   # rest of dependencies
+///   # Rest of dependencies
 /// ```
 ///
 /// ## iOS Applications
@@ -61,8 +63,7 @@ import 'fdash_localizations_fr.dart';
 /// be consistent with the languages listed in the FDashLocalizations.supportedLocales
 /// property.
 abstract class FDashLocalizations {
-  FDashLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  FDashLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,8 +71,7 @@ abstract class FDashLocalizations {
     return Localizations.of<FDashLocalizations>(context, FDashLocalizations)!;
   }
 
-  static const LocalizationsDelegate<FDashLocalizations> delegate =
-      _FDashLocalizationsDelegate();
+  static const LocalizationsDelegate<FDashLocalizations> delegate = _FDashLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,8 +83,7 @@ abstract class FDashLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -97,6 +96,8 @@ abstract class FDashLocalizations {
     Locale('en', 'US'),
   ];
 
+  String errorWrongQuizResponse();
+
   /// No description provided for @validatorRequiredItem.
   ///
   /// In en, this message translates to:
@@ -107,13 +108,13 @@ abstract class FDashLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{minLength, plural, =1 {Enter at least one character.} other {Enter at least {minLength} characters.}}'**
-  String validatorMinLength(int minLength);
+  String validatorMinLength(num minLength);
 
   /// No description provided for @validatorMaxLength.
   ///
   /// In en, this message translates to:
   /// **'{maxLength, plural, other{Enter up to {maxLength} characters.}}'**
-  String validatorMaxLength(int maxLength);
+  String validatorMaxLength(num maxLength);
 
   /// No description provided for @validatorUrl.
   ///
@@ -203,13 +204,13 @@ abstract class FDashLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{minOccurs, plural, =1 {Select at least one option.} other {Select {minOccurs} or more options.}}'**
-  String validatorMinOccurs(int minOccurs);
+  String validatorMinOccurs(num minOccurs);
 
   /// No description provided for @validatorMaxOccurs.
   ///
   /// In en, this message translates to:
   /// **'{maxOccurs, plural, =1 {Select up to one option.} other {Select up to {maxOccurs} options.}}'**
-  String validatorMaxOccurs(int maxOccurs);
+  String validatorMaxOccurs(num maxOccurs);
 
   /// No description provided for @validatorSingleSelectionOrSingleOpenString.
   ///
@@ -227,9 +228,7 @@ abstract class FDashLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Select a file of the following types: {mimeTypes}.'**
-  String validatorMimeTypes(String mimeTypes);
-
-  String errorWrongQuizResponse();
+  String validatorMimeTypes(Object mimeTypes);
 
   /// No description provided for @dataAbsentReasonAskedDeclinedInputLabel.
   ///
@@ -370,14 +369,12 @@ abstract class FDashLocalizations {
   String get fillerExclusiveOptionLabel;
 }
 
-class _FDashLocalizationsDelegate
-    extends LocalizationsDelegate<FDashLocalizations> {
+class _FDashLocalizationsDelegate extends LocalizationsDelegate<FDashLocalizations> {
   const _FDashLocalizationsDelegate();
 
   @override
   Future<FDashLocalizations> load(Locale locale) {
-    return SynchronousFuture<FDashLocalizations>(
-        lookupFDashLocalizations(locale));
+    return SynchronousFuture<FDashLocalizations>(lookupFDashLocalizations(locale));
   }
 
   @override
@@ -400,8 +397,9 @@ FDashLocalizations lookupFDashLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'FDashLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'FDashLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }
