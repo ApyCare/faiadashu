@@ -156,7 +156,8 @@ class _HorizontalAnswerFillers extends StatefulWidget {
 
   const _HorizontalAnswerFillers(
     this.questionResponseItemModel,
-    this.questionnaireTheme,);
+    this.questionnaireTheme,
+  );
 
   @override
   _HorizontalAnswerFillersState createState() =>
@@ -178,7 +179,23 @@ class _HorizontalAnswerFillersState extends State<_HorizontalAnswerFillers> {
   void _initAnswerFillers() {
     final fillableAnswerModels =
         widget.questionResponseItemModel.fillableAnswerModels;
+
+    // Avoid duplicated total score items
+    // Not truly the best solution, but it's a quick fix
+    // 1 total score item is expected per questionnaire
+    bool hasTotalScoreAlready = false;
+
     for (final answerModel in fillableAnswerModels) {
+      if (answerModel.questionnaireItemModel.isTotalScore) {
+        if (hasTotalScoreAlready) {
+          _logger.warn(
+            'Questionnaire ${widget.questionResponseItemModel.questionnaireItemModel.linkId} has more than one total score item',
+          );
+          continue;
+        } else {
+          hasTotalScoreAlready = true;
+        }
+      }
       _answerFillers[answerModel.nodeUid] =
           QuestionnaireTheme.of(context).createQuestionnaireAnswerFiller(
         answerModel,
