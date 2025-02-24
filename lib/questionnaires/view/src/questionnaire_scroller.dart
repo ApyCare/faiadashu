@@ -76,9 +76,18 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
 
   _QuestionnaireScrollerState() : super();
 
+  /// Whether the [questionnaireResponseResourceUri] has been provided
+  /// for prefilling in [fhirResourceProvider].
+  bool hasResponse = false;
+
   @override
   void initState() {
     super.initState();
+    hasResponse = widget.fhirResourceProvider is RegistryFhirResourceProvider &&
+        (widget.fhirResourceProvider as RegistryFhirResourceProvider)
+                .fhirResourceProviders
+                .length >
+            1;
   }
 
   @override
@@ -175,34 +184,48 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
               const edgeInsets = 8.0;
               const twice = 2;
 
-              return ScrollablePositionedList.builder(
-                itemScrollController: _listScrollController,
-                itemPositionsListener: _itemPositionsListener,
-                itemCount: totalLength,
-                padding: const EdgeInsets.all(edgeInsets),
-                minCacheExtent: 200, // Allow tabbing to prev/next items
-                itemBuilder: (BuildContext context, int i) {
-                  return Row(
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth:
-                              QuestionnaireTheme.of(context).maxItemWidth.clamp(
-                                    constraints.minWidth,
-                                    constraints.maxWidth - twice * edgeInsets,
-                                  ),
+              return Theme(
+                data: hasResponse
+                    ? Theme.of(context).copyWith(
+                        colorScheme: Theme.of(context).colorScheme.copyWith(
+                              primary: Colors.grey,
+                            ),
+                      )
+                    : Theme.of(context),
+                child: ScrollablePositionedList.builder(
+                  itemScrollController: _listScrollController,
+                  itemPositionsListener: _itemPositionsListener,
+                  itemCount: totalLength,
+                  padding: const EdgeInsets.all(edgeInsets),
+                  minCacheExtent: 200,
+                  // Allow tabbing to prev/next items
+                  itemBuilder: (BuildContext context, int i) {
+                    return Row(
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: QuestionnaireTheme.of(context)
+                                .maxItemWidth
+                                .clamp(
+                                  constraints.minWidth,
+                                  constraints.maxWidth - twice * edgeInsets,
+                                ),
+                          ),
+                          child: AbsorbPointer(
+                            absorbing: hasResponse,
+                            child: QuestionnaireTheme.of(context)
+                                .scrollerItemBuilder(
+                              context,
+                              QuestionnaireResponseFiller.of(context),
+                              i,
+                            ),
+                          ),
                         ),
-                        child:
-                            QuestionnaireTheme.of(context).scrollerItemBuilder(
-                          context,
-                          QuestionnaireResponseFiller.of(context),
-                          i,
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  );
-                },
+                        const Spacer(),
+                      ],
+                    );
+                  },
+                ),
               );
             },
           ),
