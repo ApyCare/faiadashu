@@ -63,7 +63,8 @@ import 'fdash_localizations_fr.dart';
 /// be consistent with the languages listed in the FDashLocalizations.supportedLocales
 /// property.
 abstract class FDashLocalizations {
-  FDashLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  FDashLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,7 +72,8 @@ abstract class FDashLocalizations {
     return Localizations.of<FDashLocalizations>(context, FDashLocalizations)!;
   }
 
-  static const LocalizationsDelegate<FDashLocalizations> delegate = _FDashLocalizationsDelegate();
+  static const LocalizationsDelegate<FDashLocalizations> delegate =
+      _FDashLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,7 +85,8 @@ abstract class FDashLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -369,12 +372,14 @@ abstract class FDashLocalizations {
   String get fillerExclusiveOptionLabel;
 }
 
-class _FDashLocalizationsDelegate extends LocalizationsDelegate<FDashLocalizations> {
+class _FDashLocalizationsDelegate
+    extends LocalizationsDelegate<FDashLocalizations> {
   const _FDashLocalizationsDelegate();
 
   @override
   Future<FDashLocalizations> load(Locale locale) {
-    return SynchronousFuture<FDashLocalizations>(lookupFDashLocalizations(locale));
+    return SynchronousFuture<FDashLocalizations>(
+        lookupFDashLocalizations(locale));
   }
 
   @override
