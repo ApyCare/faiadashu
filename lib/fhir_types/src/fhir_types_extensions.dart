@@ -20,59 +20,61 @@ extension FDashTimeExtension on FhirTime {
 
 extension FDashDateExtension on FhirDate {
   String format(Locale locale, {String defaultText = ''}) {
-    final localeCode = locale.toString();
-    final DateFormat dateFormat;
-    switch (precision) {
-      case DateTimePrecision.yyyy:
-        dateFormat = DateFormat.y(localeCode);
-      case DateTimePrecision.yyyy_MM:
-        dateFormat = DateFormat.yM(localeCode);
-      case DateTimePrecision.yyyy_MM_dd:
-        dateFormat = DateFormat.yMd(localeCode);
-      default:
-        return defaultText;
-    }
-
-    return dateFormat.format(value);
+    return toString(); // As fhir v0.12.1 handles the formatting itself
+    // final localeCode = locale.toString();
+    // final DateFormat dateFormat;
+    // switch (precision) {
+    //   case DateTimePrecision.yyyy:
+    //     dateFormat = DateFormat.y(localeCode);
+    //   case DateTimePrecision.yyyy_MM:
+    //     dateFormat = DateFormat.yM(localeCode);
+    //   case DateTimePrecision.yyyy_MM_dd:
+    //     dateFormat = DateFormat.yMd(localeCode);
+    //   default:
+    //     return defaultText;
+    // }
+    //
+    // return dateFormat.format(value);
   }
 }
 
 extension FDashDateTimeExtension on FhirDateTime {
   String format(Locale locale, {String defaultText = '', bool withTimeZone = false}) {
-    final localeCode = locale.toString();
-    final DateFormat dateFormat;
-    final japanese = locale.languageCode == 'ja';
-    switch (precision) {
-      case DateTimePrecision.invalid:
-        return defaultText;
-      case DateTimePrecision.dateTime:
-        dateFormat = (!japanese)
-            ? DateFormat.yMd(localeCode).add_jm()
-            : DateFormat('y年M月d日', localeCode).add_jm();
-      case DateTimePrecision.yyyy:
-        dateFormat = (!japanese)
-            ? DateFormat.y(localeCode)
-            : DateFormat('y年', localeCode);
-      case DateTimePrecision.yyyy_MM:
-        dateFormat = (!japanese)
-            ? DateFormat.yM(localeCode)
-            : DateFormat('y年M月', localeCode);
-      case DateTimePrecision.yyyy_MM_dd:
-        dateFormat = (!japanese)
-            ? DateFormat.yMd(localeCode)
-            : DateFormat('y年M月d日', localeCode);
-      default:
-        return defaultText;
-    }
-
-    // Dart only supports UTC or local times, even if the value is parsed from a
-    // datetime string with time zone info.
-    final localDateTime = value.toLocal();
-    final formattedValue = dateFormat.format(localDateTime);
-
-    return withTimeZone
-      ? '$formattedValue (${localDateTime.timeZoneName})'
-      : formattedValue;
+    return toString(); // As fhir v0.12.1 handles the formatting itself
+    // final localeCode = locale.toString();
+    // final DateFormat dateFormat;
+    // final japanese = locale.languageCode == 'ja';
+    // switch (precision) {
+    //   case DateTimePrecision.invalid:
+    //     return defaultText;
+    //   case DateTimePrecision.dateTime:
+    //     dateFormat = (!japanese)
+    //         ? DateFormat.yMd(localeCode).add_jm()
+    //         : DateFormat('y年M月d日', localeCode).add_jm();
+    //   case DateTimePrecision.yyyy:
+    //     dateFormat = (!japanese)
+    //         ? DateFormat.y(localeCode)
+    //         : DateFormat('y年', localeCode);
+    //   case DateTimePrecision.yyyy_MM:
+    //     dateFormat = (!japanese)
+    //         ? DateFormat.yM(localeCode)
+    //         : DateFormat('y年M月', localeCode);
+    //   case DateTimePrecision.yyyy_MM_dd:
+    //     dateFormat = (!japanese)
+    //         ? DateFormat.yMd(localeCode)
+    //         : DateFormat('y年M月d日', localeCode);
+    //   default:
+    //     return defaultText;
+    // }
+    //
+    // // Dart only supports UTC or local times, even if the value is parsed from a
+    // // datetime string with time zone info.
+    // final localDateTime = value.toLocal();
+    // final formattedValue = dateFormat.format(localDateTime);
+    //
+    // return withTimeZone
+    //   ? '$formattedValue (${localDateTime.timeZoneName})'
+    //   : formattedValue;
   }
 }
 

@@ -389,7 +389,7 @@ class QuestionnaireResponseModel {
     }
 
     final aggregator =
-        _aggregators?.firstWhere((aggregator) => aggregator is T) as T?;
+        _aggregators.firstWhere((aggregator) => aggregator is T) as T?;
 
     if (aggregator == null) {
       throw StateError('Aggregator not found. Aggregators: $_aggregators');

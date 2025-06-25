@@ -130,7 +130,7 @@ class NumericalAnswerModel extends AnswerModel<String, Quantity> {
       _sliderStepValue = sliderStepValueExtension?.valueDecimal?.value ??
           sliderStepValueExtension?.valueInteger?.value?.toDouble();
       _sliderDivisions = (_sliderStepValue != null)
-          ? ((_maxValue - _minValue) / _sliderStepValue!).round()
+          ? ((_maxValue - _minValue) / _sliderStepValue).round()
           : null;
 
       _upperSliderLabel = questionnaireItemModel.upperTextItem?.text;

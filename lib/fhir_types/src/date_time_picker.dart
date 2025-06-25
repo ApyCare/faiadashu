@@ -157,9 +157,6 @@ class _FhirDateTimePickerState extends State<FhirDateTimePicker> {
 
     final fhirDateTime = FhirDateTime(
       dateTime,
-      (widget.pickerType == FhirDate)
-          ? DateTimePrecision.yyyy_MM_dd
-          : DateTimePrecision.dateTime,
     );
     setState(() {
       _dateTimeFieldController.text = _formatDateTime(fhirDateTime, locale);
