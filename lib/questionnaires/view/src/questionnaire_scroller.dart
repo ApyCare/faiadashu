@@ -76,22 +76,23 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
 
   _QuestionnaireScrollerState() : super();
 
-  /// Whether the [questionnaireResponseResourceUri] has been provided
-  /// for prefilling in [fhirResourceProvider].
-  bool hasResponse = false;
-
   @override
   void initState() {
     super.initState();
-    hasResponse = widget.fhirResourceProvider is RegistryFhirResourceProvider &&
+    final hasResponse = widget.fhirResourceProvider is RegistryFhirResourceProvider &&
         (widget.fhirResourceProvider as RegistryFhirResourceProvider)
                 .fhirResourceProviders
                 .length >
             1;
+    
+    // Set the global state
+    QuestionnaireResponseState().setHasResponse(hasResponse);
   }
 
   @override
   void dispose() {
+    // Reset the global state when the questionnaire session ends
+    QuestionnaireResponseState().reset();
     super.dispose();
   }
 
@@ -185,7 +186,7 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
               const twice = 2;
 
               return Theme(
-                data: hasResponse
+                data: QuestionnaireResponseState().hasResponse
                     ? Theme.of(context).copyWith(
                         colorScheme: Theme.of(context).colorScheme.copyWith(
                               primary: Colors.grey,
@@ -212,7 +213,7 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
                                 ),
                           ),
                           child: AbsorbPointer(
-                            absorbing: hasResponse,
+                            absorbing: QuestionnaireResponseState().hasResponse,
                             child: QuestionnaireTheme.of(context)
                                 .scrollerItemBuilder(
                               context,
