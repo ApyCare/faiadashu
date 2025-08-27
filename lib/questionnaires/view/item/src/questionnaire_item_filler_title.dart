@@ -149,8 +149,8 @@ class _QuestionnaireItemFillerHelpState
   Future<void> _showHelp(
     BuildContext context,
     QuestionnaireItemModel questionnaireItemModel,
-  ) async {
-    return showDialog(
+  ) {
+    return showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(

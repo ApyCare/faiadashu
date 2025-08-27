@@ -26,8 +26,8 @@ class QuestionnaireFillerCircularProgress extends StatelessWidget {
         animation: QuestionnaireResponseFiller.of(context)
             .questionnaireResponseModel
             .answeredChangeNotifier,
-        builder: (context, __) {
-          final newColors = QuestionnaireResponseFiller.of(context)
+  builder: (context, _) {
+      final newColors = QuestionnaireResponseFiller.of(context)
               .questionnaireResponseModel
               .orderedResponseItemModels()
               .where((rim) => rim.isAnswerable)

@@ -220,7 +220,7 @@ class QuestionnaireResponseModel {
     if (response == null) {
       questionnaireResponseModel
           .orderedQuestionItemModels()
-          .forEach((qim) async {
+          .forEach((qim) {
         qim.populateInitialValue();
       });
     } else {
@@ -616,7 +616,7 @@ class QuestionnaireResponseModel {
   void _updateCalculations() {
     orderedResponseItemModels()
         .where((rim) => rim.questionnaireItemModel.isCalculatedExpression)
-        .forEach((rim) async {
+        .forEach((rim) {
       if (rim is QuestionItemModel) {
         rim.updateCalculatedExpression();
       }
