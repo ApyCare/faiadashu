@@ -6,8 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'fdash_localizations_en.dart';
-import 'fdash_localizations_fr.dart';
+import 'fdash_localizations_en.g.dart';
 
 // ignore_for_file: type=lint
 
@@ -64,7 +63,7 @@ import 'fdash_localizations_fr.dart';
 /// property.
 abstract class FDashLocalizations {
   FDashLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -87,19 +86,14 @@ abstract class FDashLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('fr', 'FR'),
-    Locale('en', 'US'),
-  ];
-
-  String errorWrongQuizResponse();
+  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
   /// No description provided for @validatorRequiredItem.
   ///
@@ -379,14 +373,13 @@ class _FDashLocalizationsDelegate
   @override
   Future<FDashLocalizations> load(Locale locale) {
     return SynchronousFuture<FDashLocalizations>(
-        lookupFDashLocalizations(locale));
+      lookupFDashLocalizations(locale),
+    );
   }
 
   @override
-  bool isSupported(Locale locale) => <String>[
-        'en',
-        'fr'
-      ].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FDashLocalizationsDelegate old) => false;
@@ -397,13 +390,12 @@ FDashLocalizations lookupFDashLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return FDashLocalizationsEn();
-    case 'fr':
-      return FDashLocalizationsFr();
   }
 
   throw FlutterError(
-      'FDashLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'FDashLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }
