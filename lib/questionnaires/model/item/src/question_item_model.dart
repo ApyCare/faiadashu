@@ -200,11 +200,6 @@ class QuestionItemModel extends ResponseItemModel {
   /// Check if this question is a quiz (has 1 answer with a score, total == 1),
   /// or if it's a questionnaire (total > 1).
   void _checkWrongResponse(AnswerModel<dynamic, dynamic> am, AnswerModel<dynamic, dynamic> currentAnswer) {
-    // If response is provided (pre-filling), skip wrong answer validation
-    if (QuestionnaireResponseState().hasResponse) {
-      return;
-    }
-
     if (am is CodingAnswerModel && currentAnswer is CodingAnswerModel) {
       final double totalScoreOfQuestion = am.answerOptions
           .where((option) => option.fhirOrdinalValue != null)

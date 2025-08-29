@@ -1,7 +1,7 @@
 name: faiadashu
 description: Faiadashu FHIRDash - Build beautiful healthcare apps fast — use the Flutter™ SDK and follow the HL7® FHIR® standard.
 
-version: 0.11.14
+version: 0.11.11
 publish_to: 'none'
 
 environment:
@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   collection: ^1.19.1
+  fhir: ^0.12.1
   fhir_path: ^0.12.0
   #  fhir:
   #    path: /Users/tilo/Projects/fhir/fhir
@@ -31,8 +32,8 @@ dependencies:
   webview_flutter_web: ^0.2.3+4
 
 dependency_overrides:
-  intl: ^0.20.2
-  fhir: 0.12.0
+  intl: ^0.19.0
+
   lint: ^2.3.0
 
 # For information on the generic Dart part of this file, see the
