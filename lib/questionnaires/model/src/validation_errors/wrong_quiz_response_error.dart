@@ -6,6 +6,6 @@ class WrongQuizResponseError extends ValidationError {
 
   @override
   String? getMessage(FDashLocalizations localizations) {
-    return localizations.errorWrongQuizResponse();
+    return localizations.errorWrongQuizResponse;
   }
 }

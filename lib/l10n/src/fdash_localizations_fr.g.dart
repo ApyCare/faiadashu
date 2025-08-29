@@ -1,35 +1,40 @@
-// ignore_for_file: avoid_escaping_inner_quotes, unnecessary_brace_in_string_interps, unnecessary_string_interps, always_use_package_imports
+// ignore_for_file: avoid_escaping_inner_quotes, unnecessary_brace_in_string_interps, unnecessary_string_escapes, always_use_package_imports
 
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'fdash_localizations.g.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for French (`fr`).
 class FDashLocalizationsFr extends FDashLocalizations {
-  FDashLocalizationsFr([super.locale = 'fr']);
-
-  @override
-  String get validatorRequiredItem => 'Cette question doit être complétée.';
+  FDashLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
   String get errorWrongQuizResponse => 'La réponse est incorrecte.';
 
   @override
+  String get validatorRequiredItem => 'Cette question doit être complétée.';
+
+  @override
   String validatorMinLength(num minLength) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       minLength,
       locale: localeName,
-      one: 'Entrez au moins un caractère.',
       other: 'Entrez au moins $minLength caractères.',
+      one: 'Entrez au moins un caractère.',
     );
+    return '$_temp0';
   }
 
   @override
   String validatorMaxLength(num maxLength) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       maxLength,
       locale: localeName,
       other: 'Entrez jusqu\'à $maxLength caractères.',
     );
+    return '$_temp0';
   }
 
   @override
@@ -48,12 +53,12 @@ class FDashLocalizationsFr extends FDashLocalizations {
 
   @override
   String validatorMinValue(String minValue) {
-    return 'Entrez une valeur de $minValue ou plus.';
+    return 'Entrez un nombre de $minValue ou plus.';
   }
 
   @override
   String validatorMaxValue(String maxValue) {
-    return 'Entrez une valeur jusqu\'à $maxValue.';
+    return 'Entrez un nombre jusqu\'à $maxValue.';
   }
 
   @override
@@ -82,27 +87,29 @@ class FDashLocalizationsFr extends FDashLocalizations {
 
   @override
   String validatorMinOccurs(num minOccurs) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       minOccurs,
       locale: localeName,
-      one: 'Sélectionnez au moins une option.',
       other: 'Sélectionnez $minOccurs options ou plus.',
+      one: 'Sélectionnez au moins une option.',
     );
+    return '$_temp0';
   }
 
   @override
   String validatorMaxOccurs(num maxOccurs) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       maxOccurs,
       locale: localeName,
-      one: 'Sélectionnez jusqu\'à une option.',
       other: 'Sélectionnez jusqu\'à $maxOccurs options.',
+      one: 'Sélectionnez jusqu\'à une option.',
     );
+    return '$_temp0';
   }
 
   @override
   String validatorSingleSelectionOrSingleOpenString(Object openLabel) {
-    return 'Sélectionnez une option ou entrez du texte libre dans "${openLabel}".';
+    return 'Sélectionnez une option ou entrez du texte libre dans \"$openLabel\".';
   }
 
   @override
@@ -116,7 +123,8 @@ class FDashLocalizationsFr extends FDashLocalizations {
   }
 
   @override
-  String get dataAbsentReasonAskedDeclinedInputLabel => 'Je choisis de ne pas répondre.';
+  String get dataAbsentReasonAskedDeclinedInputLabel =>
+      'Je choisis de ne pas répondre.';
 
   @override
   String get dataAbsentReasonAskedDeclinedOutput => 'A refusé de répondre';
@@ -134,7 +142,8 @@ class FDashLocalizationsFr extends FDashLocalizations {
   String get responseStatusToInProgressButtonLabel => 'Modifier';
 
   @override
-  String get progressQuestionnaireLoading => 'Le questionnaire est en cours de chargement...';
+  String get progressQuestionnaireLoading =>
+      'Le questionnaire est en cours de chargement...';
 
   @override
   String get handlingSaveButtonLabel => 'Enregistrer';
@@ -164,10 +173,10 @@ class FDashLocalizationsFr extends FDashLocalizations {
   String get loginStatusError => 'Quelque chose s\'est mal passé.';
 
   @override
-  String get handlingSaved => 'Questionnaire enregistrée.';
+  String get handlingSaved => 'Questionnaire enregistré.';
 
   @override
-  String get handlingUploaded => 'Questionnaire téléversée.';
+  String get handlingUploaded => 'Questionnaire téléversé.';
 
   @override
   String aggregationScore(Object score) {
@@ -182,7 +191,7 @@ class FDashLocalizationsFr extends FDashLocalizations {
 
   @override
   String fillerAddAnotherItemLabel(Object itemLabel) {
-    return 'Ajouter un autre "${itemLabel}"';
+    return 'Ajouter un autre \"$itemLabel\"';
   }
 
   @override

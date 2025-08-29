@@ -11,10 +11,10 @@ class FDashLocalizationsEn extends FDashLocalizations {
   FDashLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get validatorRequiredItem => 'This question needs to be completed.';
+  String get errorWrongQuizResponse => 'The response is incorrect.';
 
   @override
-  String errorWrongQuizResponse() => 'The response is incorrect.';
+  String get validatorRequiredItem => 'This question needs to be completed.';
 
   @override
   String validatorMinLength(num minLength) {
