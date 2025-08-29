@@ -14,9 +14,6 @@ class FDashLocalizationsEn extends FDashLocalizations {
   String get validatorRequiredItem => 'This question needs to be completed.';
 
   @override
-  String errorWrongQuizResponse() => 'The response is incorrect.';
-
-  @override
   String validatorMinLength(num minLength) {
     String _temp0 = intl.Intl.pluralLogic(
       minLength,

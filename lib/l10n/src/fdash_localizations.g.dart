@@ -7,7 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'fdash_localizations_en.g.dart';
-import 'fdash_localizations_fr.dart';
 
 // ignore_for_file: type=lint
 
