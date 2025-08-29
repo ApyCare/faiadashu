@@ -85,8 +85,8 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
                 .length >
             1;
     
-  // Set the global state
-  QuestionnaireResponseState().hasResponse = hasResponse;
+    // Set the global state
+    QuestionnaireResponseState().setHasResponse(hasResponse);
   }
 
   @override

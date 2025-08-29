@@ -282,7 +282,7 @@ class _CodingDropdown extends AnswerInputControl<CodingAnswerModel> {
 
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      initialValue: answerModel.singleSelectionUid,
+      value: answerModel.singleSelectionUid,
       onTap: () {
         focusNode?.requestFocus();
       },

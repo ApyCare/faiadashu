@@ -12,17 +12,27 @@ class QuestionnaireResponseState {
   
   QuestionnaireResponseState._internal();
   
+  bool _hasResponse = false;
+  
   /// Whether a questionnaire response has been provided for pre-filling.
-  ///
+  /// 
   /// When `true`, it indicates that the questionnaire is being filled with
   /// existing response data, and certain validations (like quiz response
   /// checking) should be skipped.
-  bool hasResponse = false;
+  bool get hasResponse => _hasResponse;
+  
+  /// Sets the response state.
+  /// 
+  /// This should be called by the questionnaire scroller when it determines
+  /// whether a response is provided.
+  void setHasResponse(bool hasResponse) {
+    _hasResponse = hasResponse;
+  }
   
   /// Resets the state to default (no response).
   /// 
   /// This can be called when starting a new questionnaire session.
   void reset() {
-    hasResponse = false;
+    _hasResponse = false;
   }
 }

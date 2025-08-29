@@ -9,8 +9,8 @@ Future<void> showQuestionnaireInfo(
   Locale locale,
   Questionnaire questionnaire,
   void Function(BuildContext context)? onClose,
-) {
-  return showDialog<void>(
+) async {
+  return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
