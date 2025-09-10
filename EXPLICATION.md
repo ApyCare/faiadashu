@@ -82,30 +82,32 @@ Voici le rôle des principaux répertoires dans `lib/` :
 
 ```mermaid
 graph TD
-    subgraph "Application Flutter"
+    subgraph ApplicationFlutter["Application Flutter"]
         A[Votre Page]
     end
 
-    subgraph "Package faiadashu"
+    subgraph Packagefaiadashu["Package faiadashu"]
         B(QuestionnaireFiller)
-        C{Modèle de Données}
-        D{Vue (Widgets)}
+        C[Modèle de Données]
+        D[Vue Widgets]
         E[Logique FHIRPath / Validation]
         F[Widgets par type de question]
-        G{Resource Provider}
+        G[Resource Provider]
     end
 
-    subgraph "Serveur / Données"
-      H(API FHIR)
-      I(Fichiers locaux)
+    subgraph ServeurDonnees["Serveur / Données"]
+        H(API FHIR)
+        I(Fichiers locaux)
     end
 
-    A -- "utilise" --> B
-    B --> C & D
+    A -->|utilise| B
+    B --> C
+    B --> D
     C --> E
     D --> F
     B --> G
-    G -- "charge depuis" --> H & I
+    G -->|charge depuis| H
+    G -->|charge depuis| I
 ```
 
 Cette architecture permet de :
