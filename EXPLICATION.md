@@ -87,13 +87,12 @@ graph TD
     end
 
     subgraph "Package faiadashu"
-        B(QuestionnaireFiller) --> C{Modèle de Données}
-        B --> D{Vue (Widgets)}
-
-        C --> E[Logique FHIRPath / Validation]
-        D --> F[Widgets par type de question]
-
-        B --> G{Resource Provider}
+        B(QuestionnaireFiller)
+        C{Modèle de Données}
+        D{Vue (Widgets)}
+        E[Logique FHIRPath / Validation]
+        F[Widgets par type de question]
+        G{Resource Provider}
     end
 
     subgraph "Serveur / Données"
@@ -101,10 +100,12 @@ graph TD
       I(Fichiers locaux)
     end
 
-
     A -- "utilise" --> B
-    G -- "charge depuis" --> H
-    G -- "charge depuis" --> I
+    B --> C & D
+    C --> E
+    D --> F
+    B --> G
+    G -- "charge depuis" --> H & I
 ```
 
 Cette architecture permet de :
