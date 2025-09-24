@@ -70,29 +70,57 @@ class _TotalScoreItemState extends State<TotalScoreItem> {
     _logger.debug('calculated result: $calcResult');
   }
 
-  final _nullExtension = const FhirExtension();
-
   /// Return a feedback string according to the Danish eHealth Sundhed DK spec.
   String? findDanishFeedback(int? score) {
     if (score == null) {
       return null;
     }
-    final matchExtension =
-        widget.questionnaireItemModel.questionnaireItem.extension_?.firstWhere(
-      (ext) {
-        return (ext.url?.value.toString() ==
-                'http://ehealth.sundhed.dk/fhir/StructureDefinition/ehealth-questionnaire-feedback') &&
-            (ext.extension_!.extensionOrNull('min')!.valueInteger!.value! <=
-                score) &&
-            (ext.extension_!.extensionOrNull('max')!.valueInteger!.value! >=
-                score);
-      },
-      orElse: () => _nullExtension,
-    );
+    final extensions =
+        widget.questionnaireItemModel.questionnaireItem.extension_;
 
-    return (matchExtension == _nullExtension)
-        ? null
-        : matchExtension!.extension_!.extensionOrNull('value')!.valueString;
+    if (extensions == null) {
+      return null;
+    }
+
+    for (final ext in extensions) {
+      if (ext.url?.value?.toString() !=
+          'http://ehealth.sundhed.dk/fhir/StructureDefinition/ehealth-questionnaire-feedback') {
+        continue;
+      }
+
+      final nestedExtensions = ext.extension_;
+      if (nestedExtensions == null) {
+        _logger.debug('Danish feedback extension without nested extensions.');
+        continue;
+      }
+
+      final min =
+          nestedExtensions.extensionOrNull('min')?.valueInteger?.value;
+      final max =
+          nestedExtensions.extensionOrNull('max')?.valueInteger?.value;
+
+      if (min == null || max == null) {
+        _logger.debug('Danish feedback extension missing min/max boundaries.');
+        continue;
+      }
+
+      if (score < min || score > max) {
+        continue;
+      }
+
+      final valueExtension = nestedExtensions.extensionOrNull('value');
+      final feedback =
+          valueExtension?.valueMarkdown?.value ?? valueExtension?.valueString;
+
+      if (feedback == null) {
+        _logger.debug('Danish feedback extension matched but contained no value.');
+        continue;
+      }
+
+      return feedback;
+    }
+
+    return null;
   }
 
   @override
