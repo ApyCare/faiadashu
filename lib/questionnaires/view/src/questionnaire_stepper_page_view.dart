@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:faiadashu/questionnaires/model/item/src/filler_item_model.dart';
+import 'package:faiadashu/questionnaires/model/item/src/response_item_model.dart';
+import 'package:faiadashu/questionnaires/model/item/src/question_item_model.dart';
 import 'package:faiadashu/questionnaires/view/item/src/questionnaire_item_filler.dart';
 import 'package:faiadashu/questionnaires/view/src/questionnaire_filler.dart';
 import 'package:faiadashu/questionnaires/view/src/questionnaire_theme.dart';
@@ -36,15 +40,234 @@ class _QuestionnaireStepperPageViewState
   final PageController _pageController = PageController();
   bool _hasRequestsRunning = false;
   QuestionnaireItemFiller? _currentQuestionnaireItemFiller;
+  FillerItemModel? _currentFillerItemModel;
+  VoidCallback? _currentItemListener;
+  bool _currentItemWasAnswered = false;
+  int? _currentItemGeneration;
+  Timer? _autoAdvanceTimer;
+  QuestionItemModel? _interactionLockedItem;
 
   @override
   void initState() {
     super.initState();
     widget.data.controller._attach(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _updateVisibleItem(_pageController.initialPage, notifyListeners: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.data.controller._detach();
+    _unsubscribeFromCurrentItem();
+    _pageController.dispose();
+    _cancelAutoAdvance();
+    super.dispose();
   }
 
   bool isUserInteractionAllowed() {
-    return _currentQuestionnaireItemFiller?.fillerItemModel.isUserInteractionAllowed ?? true;
+    return _currentFillerItemModel?.isUserInteractionAllowed ?? true;
+  }
+
+  bool get _shouldBlockForwardNavigation {
+    final currentItem = _currentFillerItemModel;
+    if (currentItem == null) return false;
+
+    final questionnaireItemModel = currentItem.questionnaireItemModel;
+    if (!questionnaireItemModel.isQuestion) {
+      return false;
+    }
+
+    if (currentItem is! ResponseItemModel) {
+      return false;
+    }
+
+    if (!currentItem.isAnswerable) {
+      return false;
+    }
+
+    return !currentItem.isAnswered;
+  }
+
+  ScrollPhysics get _pageScrollPhysics {
+    if (_shouldBlockForwardNavigation) {
+      return const NeverScrollableScrollPhysics();
+    }
+
+    return widget.data.physics ?? const PageScrollPhysics();
+  }
+
+  void _unsubscribeFromCurrentItem() {
+    final listener = _currentItemListener;
+    final fillerModel = _currentFillerItemModel;
+    _unlockInteraction();
+    if (listener != null && fillerModel != null) {
+      fillerModel.removeListener(listener);
+    }
+    _currentItemListener = null;
+    _cancelAutoAdvance();
+  }
+
+  void _subscribeToCurrentItem() {
+    final fillerModel = _currentFillerItemModel;
+    if (fillerModel == null) return;
+
+    void listener() {
+      if (!mounted) return;
+
+      final isAnsweredNow = fillerModel.isAnswered;
+      final newGeneration = fillerModel.questionnaireResponseModel.generation;
+      final hasGenerationChanged = _currentItemGeneration != newGeneration;
+
+      if (!_currentItemWasAnswered && isAnsweredNow) {
+        _scheduleAutoAdvance();
+      } else if (_currentItemWasAnswered && isAnsweredNow && hasGenerationChanged) {
+        _scheduleAutoAdvance();
+      } else if (_currentItemWasAnswered && !isAnsweredNow) {
+        _cancelAutoAdvance();
+      }
+      _currentItemWasAnswered = isAnsweredNow;
+      _currentItemGeneration = newGeneration;
+
+      setState(() {});
+    }
+
+    fillerModel.addListener(listener);
+    _currentItemListener = listener;
+  }
+
+  void _cancelAutoAdvance() {
+    _autoAdvanceTimer?.cancel();
+    _autoAdvanceTimer = null;
+    _unlockInteraction();
+  }
+
+  void _lockInteraction() {
+    if (_interactionLockedItem != null) {
+      return;
+    }
+
+    final item = _currentFillerItemModel;
+    if (item is QuestionItemModel && item.isUserInteractionAllowed) {
+      item.isUserInteractionAllowed = false;
+      item.notifyListeners();
+      _interactionLockedItem = item;
+    }
+  }
+
+  void _unlockInteraction() {
+    final lockedItem = _interactionLockedItem;
+    if (lockedItem == null) {
+      return;
+    }
+
+    if (!lockedItem.isUserInteractionAllowed) {
+      lockedItem.isUserInteractionAllowed = true;
+      lockedItem.notifyListeners();
+    }
+
+    _interactionLockedItem = null;
+  }
+
+  bool _canAutoAdvanceFromCurrentItem() {
+    final currentItem = _currentFillerItemModel;
+    if (currentItem is! ResponseItemModel) {
+      return false;
+    }
+
+    final questionnaireItemModel = currentItem.questionnaireItemModel;
+    if (!questionnaireItemModel.isQuestion ||
+        !questionnaireItemModel.isCodingType ||
+        questionnaireItemModel.questionnaireItem.repeats?.value == true) {
+      return false;
+    }
+
+    if (!currentItem.isAnswerable || !currentItem.isUserInteractionAllowed) {
+      return false;
+    }
+
+    if (!currentItem.isAnswered) {
+      return false;
+    }
+
+    return _hasNextPage();
+  }
+
+  bool _hasNextPage() {
+    final currentPage = _pageController.hasClients
+        ? (_pageController.page?.round() ?? _pageController.initialPage)
+        : _pageController.initialPage;
+
+    final themeData = QuestionnaireTheme.of(context);
+    final responseFiller = QuestionnaireResponseFiller.of(context);
+    final nextPageFillerItem = themeData.stepperQuestionnaireItemFiller(
+      responseFiller,
+      currentPage + 1,
+    );
+
+    return nextPageFillerItem != null;
+  }
+
+  void _scheduleAutoAdvance() {
+    if (!_canAutoAdvanceFromCurrentItem()) {
+      _unlockInteraction();
+      return;
+    }
+
+    if (_autoAdvanceTimer != null) {
+      _autoAdvanceTimer!.cancel();
+    }
+
+    _lockInteraction();
+    _autoAdvanceTimer = Timer(const Duration(milliseconds: 600), () {
+      if (!mounted) return;
+      _autoAdvanceTimer = null;
+
+      if (!_canAutoAdvanceFromCurrentItem() ||
+          _hasRequestsRunning ||
+          _shouldBlockForwardNavigation) {
+        _unlockInteraction();
+        return;
+      }
+
+      final initialPage = _pageController.hasClients
+          ? (_pageController.page?.round() ?? _pageController.initialPage)
+          : _pageController.initialPage;
+
+      widget.data.controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+
+      Future.delayed(const Duration(milliseconds: 400), () {
+        if (!mounted) return;
+        final currentPage = _pageController.hasClients
+            ? (_pageController.page?.round() ??
+                _pageController.initialPage)
+            : _pageController.initialPage;
+        if (currentPage == initialPage) {
+          _unlockInteraction();
+        }
+      });
+    });
+  }
+
+  void _handleIncompleteAnswer() {
+    _cancelAutoAdvance();
+    final responseFiller = QuestionnaireResponseFiller.of(context);
+    final currentItem = _currentFillerItemModel;
+    if (currentItem is ResponseItemModel) {
+      currentItem.validate(updateErrorText: true, notifyListeners: true);
+    }
+
+    final currentPage = _pageController.hasClients
+        ? (_pageController.page?.round() ?? _pageController.initialPage)
+        : _pageController.initialPage;
+    final focusIndex = responseFiller.indexOfVisibleItemAt(currentPage);
+    if (focusIndex >= 0) {
+      responseFiller.requestFocus(focusIndex);
+    }
   }
 
   /// Determines if we can proceed to the next page.
@@ -52,6 +275,14 @@ class _QuestionnaireStepperPageViewState
     required QuestionnaireStepperDirection direction,
   }) async {
     _hasRequestsRunning = true;
+
+    if (direction == QuestionnaireStepperDirection.next &&
+        _shouldBlockForwardNavigation) {
+      _handleIncompleteAnswer();
+      _hasRequestsRunning = false;
+      return BeforePageChangedData(canProceed: false);
+    }
+
     final currentPage = _pageController.page!.round();
     final themeData = QuestionnaireTheme.of(context);
     final fillerData = QuestionnaireResponseFiller.of(context);
@@ -63,10 +294,11 @@ class _QuestionnaireStepperPageViewState
 
     final defaultData = BeforePageChangedData(canProceed: true);
 
-    if (_currentQuestionnaireItemFiller != null) {
+    final currentFillerItemModel = _currentFillerItemModel;
+    if (currentFillerItemModel != null) {
       final data = await widget.data.onBeforePageChanged?.call(
         direction,
-        _currentQuestionnaireItemFiller!.fillerItemModel,
+        currentFillerItemModel,
         nextPageFillerItem?.fillerItemModel,
       );
       _hasRequestsRunning = false;
@@ -82,7 +314,7 @@ class _QuestionnaireStepperPageViewState
   ///
   /// This ensures that the parent context knows which item is visible and can perform any
   /// necessary actions or updates related to that item.
-  void _updateVisibleItem(int index) {
+  void _updateVisibleItem(int index, {bool notifyListeners = false}) {
     final responseFiller = QuestionnaireResponseFiller.of(context);
 
     final data = QuestionnaireTheme.of(context).stepperQuestionnaireItemFiller(
@@ -90,8 +322,37 @@ class _QuestionnaireStepperPageViewState
       index,
     );
 
-    _currentQuestionnaireItemFiller = data;
+    final previousFillerModel = _currentFillerItemModel;
+    final newFillerModel = data?.fillerItemModel;
+
+    if (previousFillerModel != newFillerModel) {
+      _unsubscribeFromCurrentItem();
+      _currentQuestionnaireItemFiller = data;
+      _currentFillerItemModel = newFillerModel;
+      if (newFillerModel != null) {
+        _currentItemWasAnswered = newFillerModel.isAnswered;
+        _currentItemGeneration =
+            newFillerModel.questionnaireResponseModel.generation;
+        if (_currentItemWasAnswered) {
+          _cancelAutoAdvance();
+        }
+        _subscribeToCurrentItem();
+      } else {
+        _currentItemWasAnswered = false;
+        _currentItemGeneration = null;
+      }
+    } else {
+      _currentQuestionnaireItemFiller = data;
+      _currentFillerItemModel = newFillerModel;
+      _currentItemWasAnswered = newFillerModel?.isAnswered ?? false;
+      _currentItemGeneration =
+          newFillerModel?.questionnaireResponseModel.generation;
+    }
     widget.data.onVisibleItemUpdated?.call(data?.fillerItemModel);
+
+    if (notifyListeners && mounted) {
+      setState(() {});
+    }
   }
 
   /// Manages tasks related to page index changes.
@@ -99,7 +360,7 @@ class _QuestionnaireStepperPageViewState
   /// This function is called when the user navigates to a different page.
   /// It updates the visible item, and notifies listeners of the change.
   void _handleChangedPage(int index) {
-    _updateVisibleItem(index);
+    _updateVisibleItem(index, notifyListeners: true);
     widget.data.onPageChanged?.call(index);
   }
 
@@ -119,7 +380,12 @@ class _QuestionnaireStepperPageViewState
             index,
           );
 
-          _updateVisibleItem(index);
+          final currentPage = _pageController.hasClients
+              ? (_pageController.page?.round() ?? _pageController.initialPage)
+              : _pageController.initialPage;
+          if (currentPage == index) {
+            _updateVisibleItem(index);
+          }
           if (data == null) return null;
 
           return QuestionnaireTheme.of(context).stepperPageItemBuilder(
@@ -127,15 +393,9 @@ class _QuestionnaireStepperPageViewState
             data,
           );
         },
-        physics: widget.data.physics,
+        physics: _pageScrollPhysics,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    widget.data.controller._detach();
-    super.dispose();
   }
 }
 
