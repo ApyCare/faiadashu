@@ -1,6 +1,5 @@
 {
     "@@locale": "en",
-    "errorWrongQuizResponse": "The response is incorrect.",
     "validatorRequiredItem": "This question needs to be completed.",
     "validatorMinLength": "{minLength, plural, =1 {Enter at least one character.} other {Enter at least {minLength} characters.}}",
     "@validatorMinLength": {

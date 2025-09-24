@@ -6,8 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'fdash_localizations_ar.g.dart';
+import 'fdash_localizations_de.g.dart';
 import 'fdash_localizations_en.g.dart';
-import 'fdash_localizations_fr.g.dart';
+import 'fdash_localizations_es.g.dart';
+import 'fdash_localizations_ja.g.dart';
 
 // ignore_for_file: type=lint
 
@@ -63,8 +66,7 @@ import 'fdash_localizations_fr.g.dart';
 /// be consistent with the languages listed in the FDashLocalizations.supportedLocales
 /// property.
 abstract class FDashLocalizations {
-  FDashLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  FDashLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -72,8 +74,7 @@ abstract class FDashLocalizations {
     return Localizations.of<FDashLocalizations>(context, FDashLocalizations)!;
   }
 
-  static const LocalizationsDelegate<FDashLocalizations> delegate =
-      _FDashLocalizationsDelegate();
+  static const LocalizationsDelegate<FDashLocalizations> delegate = _FDashLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -85,25 +86,21 @@ abstract class FDashLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('fr'),
+    Locale('ar'),
+    Locale('de'),
+    Locale('es'),
+    Locale('ja')
   ];
-
-  /// No description provided for @errorWrongQuizResponse.
-  ///
-  /// In en, this message translates to:
-  /// **'The response is incorrect.'**
-  String get errorWrongQuizResponse;
 
   /// No description provided for @validatorRequiredItem.
   ///
@@ -376,38 +373,37 @@ abstract class FDashLocalizations {
   String get fillerExclusiveOptionLabel;
 }
 
-class _FDashLocalizationsDelegate
-    extends LocalizationsDelegate<FDashLocalizations> {
+class _FDashLocalizationsDelegate extends LocalizationsDelegate<FDashLocalizations> {
   const _FDashLocalizationsDelegate();
 
   @override
   Future<FDashLocalizations> load(Locale locale) {
-    return SynchronousFuture<FDashLocalizations>(
-      lookupFDashLocalizations(locale),
-    );
+    return SynchronousFuture<FDashLocalizations>(lookupFDashLocalizations(locale));
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'de', 'en', 'es', 'ja'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FDashLocalizationsDelegate old) => false;
 }
 
 FDashLocalizations lookupFDashLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return FDashLocalizationsEn();
-    case 'fr':
-      return FDashLocalizationsFr();
+    case 'ar': return FDashLocalizationsAr();
+    case 'de': return FDashLocalizationsDe();
+    case 'en': return FDashLocalizationsEn();
+    case 'es': return FDashLocalizationsEs();
+    case 'ja': return FDashLocalizationsJa();
   }
 
   throw FlutterError(
     'FDashLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

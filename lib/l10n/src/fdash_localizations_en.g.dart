@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_escaping_inner_quotes, unnecessary_brace_in_string_interps, unnecessary_string_escapes, always_use_package_imports
 
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'fdash_localizations.g.dart';
 
 // ignore_for_file: type=lint
@@ -9,9 +9,6 @@ import 'fdash_localizations.g.dart';
 /// The translations for English (`en`).
 class FDashLocalizationsEn extends FDashLocalizations {
   FDashLocalizationsEn([String locale = 'en']) : super(locale);
-
-  @override
-  String get errorWrongQuizResponse => 'The response is incorrect.';
 
   @override
   String get validatorRequiredItem => 'This question needs to be completed.';
@@ -123,8 +120,7 @@ class FDashLocalizationsEn extends FDashLocalizations {
   }
 
   @override
-  String get dataAbsentReasonAskedDeclinedInputLabel =>
-      'I choose not to answer.';
+  String get dataAbsentReasonAskedDeclinedInputLabel => 'I choose not to answer.';
 
   @override
   String get dataAbsentReasonAskedDeclinedOutput => 'Declined to answer';

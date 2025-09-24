@@ -35,6 +35,7 @@ class QuestionnaireScroller extends StatefulWidget {
 
   final void Function(QuestionnaireResponseModel?)?
       onQuestionnaireResponseChanged;
+  final void Function(AnswerModel?)? onAnswerChanged;
 
   const QuestionnaireScroller({
     required this.scaffoldBuilder,
@@ -44,6 +45,7 @@ class QuestionnaireScroller extends StatefulWidget {
     this.onLinkTap,
     this.questionnaireModelDefaults = const QuestionnaireModelDefaults(),
     this.onQuestionnaireResponseChanged,
+    this.onAnswerChanged,
     super.key,
   });
 
@@ -100,6 +102,10 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
     widget.onQuestionnaireResponseChanged?.call(_questionnaireResponseModel);
   }
 
+  void _handleChangedAnswer(AnswerModel? answerModel) {
+    widget.onAnswerChanged?.call(answerModel);
+  }
+
   /// Scrolls to a position for a [FillerItemModel].
   ///
   /// The item will also be focussed.
@@ -115,7 +121,7 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
     final index = _questionnaireResponseModel!
         .indexOfFillerItem((fim) => fim == fillerItemModel);
 
-    scrollTo(index!);
+    scrollTo(index! + 1);
   }
 
   /// Scrolls to a position as conveyed by an [index].
@@ -169,7 +175,7 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
         _belowFillerContext = context;
         final questionnaireFiller = QuestionnaireResponseFiller.of(context);
 
-        final totalLength = questionnaireFiller.fillerItemModels.length;
+        final totalLength = questionnaireFiller.fillerItemModels.length + 1;
 
         _logger.trace(
           'Scroll position: ${_itemPositionsListener.itemPositions.value}',
@@ -182,51 +188,47 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
           },
           child: LayoutBuilder(
             builder: (context, constraints) {
-              const edgeInsets = 8.0;
-              const twice = 2;
+<<<<<<< HEAD
+              return ScrollablePositionedList.builder(
+                itemScrollController: _listScrollController,
+                itemPositionsListener: _itemPositionsListener,
+                itemCount: totalLength,
+                padding: QuestionnaireTheme.of(context).scrollerPadding,
+                minCacheExtent: 200, // Allow tabbing to prev/next items
+                itemBuilder: (BuildContext context, int i) {
+                  if (i == 0) {
+                    return QuestionnaireTheme.of(context)
+                        .scrollerFirstItemBuilder(context);
+                  }
 
-              return Theme(
-                data: QuestionnaireResponseState().hasResponse
-                    ? Theme.of(context).copyWith(
-                        colorScheme: Theme.of(context).colorScheme.copyWith(
-                              primary: Colors.grey,
-                            ),
-                      )
-                    : Theme.of(context),
-                child: ScrollablePositionedList.builder(
-                  itemScrollController: _listScrollController,
-                  itemPositionsListener: _itemPositionsListener,
-                  itemCount: totalLength,
-                  padding: const EdgeInsets.all(edgeInsets),
-                  minCacheExtent: 200,
-                  // Allow tabbing to prev/next items
-                  itemBuilder: (BuildContext context, int i) {
-                    return Row(
-                      children: [
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: QuestionnaireTheme.of(context)
-                                .maxItemWidth
-                                .clamp(
-                                  constraints.minWidth,
-                                  constraints.maxWidth - twice * edgeInsets,
-                                ),
-                          ),
-                          child: AbsorbPointer(
-                            absorbing: QuestionnaireResponseState().hasResponse,
-                            child: QuestionnaireTheme.of(context)
-                                .scrollerItemBuilder(
-                              context,
-                              QuestionnaireResponseFiller.of(context),
-                              i,
-                            ),
-                          ),
+                  return Row(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth:
+                              QuestionnaireTheme.of(context).maxItemWidth.clamp(
+                                    constraints.minWidth,
+                                    constraints.maxWidth -
+                                        (QuestionnaireTheme.of(context)
+                                                .scrollerPadding
+                                                .left +
+                                            QuestionnaireTheme.of(context)
+                                                .scrollerPadding
+                                                .right),
+                                  ),
                         ),
-                        const Spacer(),
-                      ],
-                    );
-                  },
-                ),
+                        child:
+                            QuestionnaireTheme.of(context).scrollerItemBuilder(
+                          context,
+                          QuestionnaireResponseFiller.of(context),
+                          i - 1,
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  );
+                },
+              );
               );
             },
           ),
@@ -253,6 +255,11 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
                 .addListener(_handleChangedQuestionnaireResponse);
             _questionnaireResponseModel?.responseStatusNotifier
                 .addListener(_handleChangedQuestionnaireResponse);
+            _questionnaireResponseModel?.answerChangedNotifier.addListener(() {
+              _handleChangedAnswer(
+                _questionnaireResponseModel?.answerChangedNotifier.value,
+              );
+            });
           }
 
           // Listen for new invalid items and then scroll to the first one.

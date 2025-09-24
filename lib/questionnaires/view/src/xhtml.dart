@@ -1,9 +1,9 @@
 import 'package:faiadashu/fhir_types/fhir_types.dart';
 import 'package:faiadashu/logging/logging.dart';
 import 'package:faiadashu/questionnaires/model/model.dart';
-import 'package:faiadashu/utils/to_text_span.dart';
 import 'package:fhir/r4.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 // OPTIMIZE: Can this wrapper around a child be avoided?
 
@@ -119,16 +119,16 @@ class Xhtml extends StatelessWidget {
       );
     } else {
       return Xhtml._(
-        RichText(
-          key: key,
-          maxLines: maxLines,
-          overflow: TextOverflow.ellipsis,
-          text: toTextSpan(
-            context,
-            xhtml,
-            defaultTextStyle:
-                defaultTextStyle ?? Theme.of(context).textTheme.bodyMedium,
-          ),
+        HtmlWidget(
+          xhtml,
+          textStyle: defaultTextStyle ?? Theme.of(context).textTheme.bodyMedium,
+          customStylesBuilder: (element) => {
+            'display': '-webkit-box',
+            '-webkit-line-clamp': maxLines.toString(),
+            '-webkit-box-orient': 'vertical',
+            'overflow': 'hidden',
+            'text-overflow': 'ellipsis',
+          },
         ),
       );
     }

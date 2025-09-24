@@ -48,7 +48,9 @@ class _QuestionnaireStepperPageViewState
   }
 
   /// Determines if we can proceed to the next page.
-  Future<BeforePageChangedData> _onBeforePageChanged() async {
+  Future<BeforePageChangedData> _onBeforePageChanged({
+    required QuestionnaireStepperDirection direction,
+  }) async {
     _hasRequestsRunning = true;
     final currentPage = _pageController.page!.round();
     final themeData = QuestionnaireTheme.of(context);
@@ -63,6 +65,7 @@ class _QuestionnaireStepperPageViewState
 
     if (_currentQuestionnaireItemFiller != null) {
       final data = await widget.data.onBeforePageChanged?.call(
+        direction,
         _currentQuestionnaireItemFiller!.fillerItemModel,
         nextPageFillerItem?.fillerItemModel,
       );
@@ -105,8 +108,6 @@ class _QuestionnaireStepperPageViewState
     return _QuestionnaireStepperPageViewInheritedWidget(
       data: widget.data,
       child: PageView.builder(
-        /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-        /// Use [Axis.vertical] to scroll vertically.
         controller: _pageController,
         onPageChanged: _handleChangedPage,
         itemBuilder: (BuildContext context, int index) {
@@ -171,7 +172,9 @@ class QuestionnaireStepperPageViewController {
       return;
     }
 
-    final data = await _state?._onBeforePageChanged();
+    final data = await _state?._onBeforePageChanged(
+      direction: QuestionnaireStepperDirection.next,
+    );
     if (data?.canProceed ?? true) {
       _state?._pageController.nextPage(
         curve: curve ?? Curves.easeIn,
@@ -181,7 +184,10 @@ class QuestionnaireStepperPageViewController {
   }
 
   /// Back to the previous page in the `QuestionnaireStepperPageView`.
-  void previousPage({Duration? duration, Curve? curve}) {
+  Future<void> previousPage({
+    Duration? duration,
+    Curve? curve,
+  }) async {
     /// This will prevent racing issue
     if (_state?._hasRequestsRunning ?? false) {
       return;
@@ -191,10 +197,15 @@ class QuestionnaireStepperPageViewController {
       return;
     }
 
-    _state?._pageController.previousPage(
-      curve: curve ?? Curves.easeIn,
-      duration: duration ?? const Duration(milliseconds: 250),
+    final data = await _state?._onBeforePageChanged(
+      direction: QuestionnaireStepperDirection.previous,
     );
+    if (data?.canProceed ?? true) {
+      _state?._pageController.previousPage(
+        curve: curve ?? Curves.easeIn,
+        duration: duration ?? const Duration(milliseconds: 250),
+      );
+    }
   }
 
   /// Jump to specific page in the `QuestionnaireStepperPageView`.
@@ -259,8 +270,9 @@ class QuestionnaireStepperPageViewData {
   final ScrollPhysics? physics;
   final ValueChanged<int>? onPageChanged;
   final Future<BeforePageChangedData> Function(
-    FillerItemModel,
-    FillerItemModel?,
+    QuestionnaireStepperDirection direction,
+    FillerItemModel currentItemModel,
+    FillerItemModel? nextItemModel,
   )? onBeforePageChanged;
   final void Function(FillerItemModel?)? onVisibleItemUpdated;
 
@@ -273,4 +285,13 @@ class QuestionnaireStepperPageViewData {
   }) {
     this.controller = controller ?? QuestionnaireStepperPageViewController();
   }
+}
+
+/// Enum to define the direction of navigation in a questionnaire stepper.
+enum QuestionnaireStepperDirection {
+  /// Represents moving forward to the next question or section.
+  next,
+
+  /// Represents moving backward to the previous question or section.
+  previous,
 }

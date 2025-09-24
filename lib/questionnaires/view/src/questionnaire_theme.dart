@@ -1,4 +1,5 @@
 import 'package:faiadashu/faiadashu.dart';
+import 'package:faiadashu/utils/html_title_renderer.dart';
 import 'package:flutter/material.dart';
 
 /// Should coding selections be presented in a compact or an expanded format?
@@ -145,6 +146,68 @@ class QuestionnaireThemeData {
     required CodingAnswerOptionModel optionModel,
   }) codingControlOptionTitleRenderer;
 
+  /// This function takes a [BuildContext] and a list of [CodingChoice] widgets,
+  /// and returns a widget that arranges the coding choices horizontally.
+  ///
+  /// The [choices] parameter is a required list of [CodingChoice] widgets.
+  final Widget Function(
+    BuildContext context, {
+    required List<CodingChoice> choices,
+  }) codingHorizontalLayoutBuilder;
+
+  /// This function takes a [BuildContext] and a list of [CodingChoice] widgets,
+  /// and returns a widget that arranges the coding choices vertically.
+  ///
+  /// The [choices] parameter is a required list of [CodingChoice] widgets.
+  final Widget Function(
+    BuildContext context, {
+    required List<CodingChoice> choices,
+  }) codingVerticalLayoutBuilder;
+
+  /// A builder function for creating a radio choice widget for coding answers.
+  ///
+  /// [context] - The build context in which the widget is built.
+  ///
+  /// [answerModel] - A required [CodingAnswerModel] representing the model of the coding answer.
+  ///
+  /// [answerOption] - A required [CodingAnswerOptionModel] representing the specific option for the coding answer.
+  ///
+  /// [titleWidget] - A required [Widget] that represents the title of the radio choice.
+  ///
+  /// [onChanged] - A required callback function that is triggered when the radio button state changes. It takes a [String?] indicating the new value of the radio button.
+  final Widget Function(
+    BuildContext context, {
+    required CodingAnswerModel answerModel,
+    required CodingAnswerOptionModel? answerOption,
+    required Widget titleWidget,
+    required Function(String?) onChanged,
+  }) codingRadioChoiceBuilder;
+
+  /// A builder function for creating a checkbox choice widget for coding answers.
+  ///
+  /// [context] - The build context in which the widget is built.
+  ///
+  /// [answerModel] - A required [CodingAnswerModel] representing the model of the coding answer.
+  ///
+  /// [answerOption] - A required [CodingAnswerOptionModel] representing the specific option for the coding answer.
+  ///
+  /// [titleWidget] - A required [Widget] that represents the title of the checkbox choice.
+  ///
+  /// [subtitleWidget] - An optional [Widget] that represents the subtitle of the checkbox choice. Can be null.
+  ///
+  /// [onChanged] - A required callback function that is triggered when the checkbox state changes. It takes a [bool?] indicating the new state of the checkbox.
+  final Widget Function(
+    BuildContext context, {
+    required CodingAnswerModel answerModel,
+    required CodingAnswerOptionModel answerOption,
+    required Widget titleWidget,
+    required Widget? subtitleWidget,
+    required Function(bool?) onChanged,
+  }) codingCheckboxChoiceBuilder;
+
+  /// The amount of space by which to inset the children in [QuestionnaireScroller].
+  final EdgeInsets scrollerPadding;
+
   /// Builds layouts for QuestionnaireScroller items.
   ///
   /// [responseFiller] contains the state data for the current [QuestionnaireResponseFiller].
@@ -155,6 +218,16 @@ class QuestionnaireThemeData {
     QuestionnaireFillerData responseFiller,
     int itemIndex,
   ) scrollerItemBuilder;
+
+  /// Builds the layout for the first item in a group.
+  ///
+  /// This builder constructs the initial item in a group layout,
+  /// typically used to display a header, e.g. questionnaire title.
+  ///
+  /// Returns a [Widget] that represents the first item in the scroller.
+  final Widget Function(
+    BuildContext context,
+  ) scrollerFirstItemBuilder;
 
   /// Get [QuestionnaireItemFiller] for a specific page.
   ///
@@ -175,12 +248,20 @@ class QuestionnaireThemeData {
     QuestionnaireItemFiller itemFiller,
   ) stepperPageItemBuilder;
 
+  /// Configuration for HTML title rendering.
+  ///
+  /// This controls how questionnaire item titles (questions, groups, displays) are rendered as HTML.
+  /// Use predefined configurations or create a custom [HtmlTitleConfig].
+  final HtmlTitleConfig htmlTitleConfig;
+
   /// Allows customizing the rendering of titles in questionnaire items (questions, groups, displays).
   /// The returned value should be an HTML string. Please make sure content is HTML-escaped properly.
   ///
   /// [fillerItem] is the corresponding model associated with the questionnaire item being rendered.
+  /// [htmlTitleConfig] is the configuration for HTML title rendering from the theme.
   final String Function({
     required FillerItemModel fillerItem,
+    required HtmlTitleConfig htmlTitleConfig,
   }) fillerItemHtmlTitleRenderer;
 
   /// Builds layouts for the title widgets of question/group/display items.
@@ -223,12 +304,17 @@ class QuestionnaireThemeData {
     this.groupItemLayoutBuilder = _defaultGroupItemLayoutBuilder,
     this.displayItemLayoutBuilder = _defaultDisplayItemLayoutBuilder,
     this.codingControlLayoutBuilder = _defaultCodingControlLayoutBuilder,
-    this.codingControlOptionTitleRenderer =
-        _defaultCodingControlOptionTitleRenderer,
+    this.codingHorizontalLayoutBuilder = _defaultCodingHorizontalLayoutBuilder,
+    this.codingVerticalLayoutBuilder = _defaultCodingVerticalLayoutBuilder,
+    this.codingRadioChoiceBuilder = _defaultCodingRadioChoiceBuilder,
+    this.codingCheckboxChoiceBuilder = _defaultCodingCheckboxChoiceBuilder,
+    this.scrollerPadding = const EdgeInsets.all(8.0),
     this.scrollerItemBuilder = _defaultScrollerItemBuilder,
+    this.scrollerFirstItemBuilder = _defaultScrollerFirstItemBuilder,
     this.stepperQuestionnaireItemFiller =
         _defaultStepperQuestionnaireItemFiller,
     this.stepperPageItemBuilder = _defaultStepperPageItemBuilder,
+    this.htmlTitleConfig = basicHtmlTitleConfig,
     this.fillerItemHtmlTitleRenderer = _defaultFillerItemHtmlTitleRenderer,
     this.fillerItemTitleLayoutBuilder = _defaultFillerItemTitleLayoutBuilder,
   });
@@ -486,6 +572,12 @@ class QuestionnaireThemeData {
     return responseFiller.itemFillerAt(index);
   }
 
+  static Widget _defaultScrollerFirstItemBuilder(
+    BuildContext context,
+  ) {
+    return const SizedBox(height: 0);
+  }
+
   static QuestionnaireItemFiller? _defaultStepperQuestionnaireItemFiller(
     QuestionnaireFillerData responseFiller,
     int index,
@@ -508,29 +600,12 @@ class QuestionnaireThemeData {
 
   static String _defaultFillerItemHtmlTitleRenderer({
     required FillerItemModel fillerItem,
+    required HtmlTitleConfig htmlTitleConfig,
   }) {
-    final questionnaireItemModel = fillerItem.questionnaireItemModel;
-
-    final requiredTag = (questionnaireItemModel.isRequired) ? '*' : '';
-
-    final openStyleTag = questionnaireItemModel.isGroup
-        ? '<h2>'
-        : questionnaireItemModel.isQuestion
-            ? '<b>'
-            : '<p>';
-
-    final closeStyleTag = questionnaireItemModel.isGroup
-        ? '</h2>'
-        : questionnaireItemModel.isQuestion
-            ? '</b>'
-            : '</p>';
-
-    final prefixText = fillerItem.prefix;
-    final title = questionnaireItemModel.text?.xhtmlText ?? '';
-
-    return (prefixText != null)
-        ? '$openStyleTag${prefixText.xhtmlText}&nbsp;$title$requiredTag$closeStyleTag'
-        : '$openStyleTag$title$requiredTag$closeStyleTag';
+    return renderHtmlTitle(
+      fillerItem: fillerItem,
+      config: htmlTitleConfig,
+    );
   }
 
   static Widget _defaultFillerItemTitleLayoutBuilder(
@@ -557,6 +632,64 @@ class QuestionnaireThemeData {
             ),
         ],
       ),
+    );
+  }
+
+  static Widget _defaultCodingCheckboxChoiceBuilder(
+    BuildContext context, {
+    required CodingAnswerModel answerModel,
+    required CodingAnswerOptionModel answerOption,
+    required Widget titleWidget,
+    required Widget? subtitleWidget,
+    required Function(bool?) onChanged,
+  }) {
+    return CheckboxListTile(
+      title: titleWidget,
+      subtitle: subtitleWidget,
+      value: answerModel.isSelected(answerOption.uid),
+      onChanged: onChanged,
+    );
+  }
+
+  static Widget _defaultCodingRadioChoiceBuilder(
+    BuildContext context, {
+    required CodingAnswerModel answerModel,
+    required CodingAnswerOptionModel? answerOption,
+    required Widget titleWidget,
+    required Function(String?) onChanged,
+  }) {
+    return RadioListTile<String?>(
+      title: titleWidget,
+      // allows value to be set to null on repeat tap
+      toggleable: true,
+      groupValue: answerModel.singleSelectionUid,
+      value: answerOption?.uid,
+      onChanged: onChanged,
+    );
+  }
+
+  static Widget _defaultCodingHorizontalLayoutBuilder(
+    BuildContext context, {
+    required List<CodingChoice> choices,
+  }) {
+    return Row(
+      children: choices.map<Widget>(
+        (choice) {
+          return choice.answerOption == null
+              ? SizedBox(width: 96, child: choice)
+              : Expanded(child: choice);
+        },
+      ).toList(growable: false),
+    );
+  }
+
+  static Widget _defaultCodingVerticalLayoutBuilder(
+    BuildContext context, {
+    required List<CodingChoice> choices,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: choices,
     );
   }
 }
