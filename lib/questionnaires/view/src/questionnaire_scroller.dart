@@ -188,7 +188,6 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
           },
           child: LayoutBuilder(
             builder: (context, constraints) {
-<<<<<<< HEAD
               return ScrollablePositionedList.builder(
                 itemScrollController: _listScrollController,
                 itemPositionsListener: _itemPositionsListener,
@@ -205,20 +204,21 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                          maxWidth:
-                              QuestionnaireTheme.of(context).maxItemWidth.clamp(
-                                    constraints.minWidth,
-                                    constraints.maxWidth -
-                                        (QuestionnaireTheme.of(context)
-                                                .scrollerPadding
-                                                .left +
-                                            QuestionnaireTheme.of(context)
-                                                .scrollerPadding
-                                                .right),
-                                  ),
+                          maxWidth: QuestionnaireTheme.of(context)
+                              .maxItemWidth
+                              .clamp(
+                                constraints.minWidth,
+                                constraints.maxWidth -
+                                    (QuestionnaireTheme.of(context)
+                                            .scrollerPadding
+                                            .left +
+                                        QuestionnaireTheme.of(context)
+                                            .scrollerPadding
+                                            .right),
+                              ),
                         ),
-                        child:
-                            QuestionnaireTheme.of(context).scrollerItemBuilder(
+                        child: QuestionnaireTheme.of(context)
+                            .scrollerItemBuilder(
                           context,
                           QuestionnaireResponseFiller.of(context),
                           i - 1,
@@ -228,7 +228,6 @@ class _QuestionnaireScrollerState extends State<QuestionnaireScroller> {
                     ],
                   );
                 },
-              );
               );
             },
           ),

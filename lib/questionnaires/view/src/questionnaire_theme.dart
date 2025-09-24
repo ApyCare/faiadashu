@@ -304,6 +304,8 @@ class QuestionnaireThemeData {
     this.groupItemLayoutBuilder = _defaultGroupItemLayoutBuilder,
     this.displayItemLayoutBuilder = _defaultDisplayItemLayoutBuilder,
     this.codingControlLayoutBuilder = _defaultCodingControlLayoutBuilder,
+    this.codingControlOptionTitleRenderer =
+        _defaultCodingControlOptionTitleRenderer,
     this.codingHorizontalLayoutBuilder = _defaultCodingHorizontalLayoutBuilder,
     this.codingVerticalLayoutBuilder = _defaultCodingVerticalLayoutBuilder,
     this.codingRadioChoiceBuilder = _defaultCodingRadioChoiceBuilder,

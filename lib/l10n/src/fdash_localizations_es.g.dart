@@ -11,6 +11,9 @@ class FDashLocalizationsEs extends FDashLocalizations {
   FDashLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get errorWrongQuizResponse => 'La respuesta es incorrecta.';
+
+  @override
   String get validatorRequiredItem => 'Esta pregunta debe ser completada.';
 
   @override

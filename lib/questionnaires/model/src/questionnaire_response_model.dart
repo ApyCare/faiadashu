@@ -396,14 +396,14 @@ class QuestionnaireResponseModel {
       throw StateError('Aggregators have not been specified in constructor.');
     }
 
-    final aggregator =
-        _aggregators.firstWhere((aggregator) => aggregator is T) as T?;
+    final aggregators = _aggregators!;
+    final aggregator = aggregators.firstWhere(
+      (aggregator) => aggregator is T,
+      orElse: () =>
+          throw StateError('Aggregator not found. Aggregators: $aggregators'),
+    );
 
-    if (aggregator == null) {
-      throw StateError('Aggregator not found. Aggregators: $_aggregators');
-    } else {
-      return aggregator;
-    }
+    return aggregator as T;
   }
 
   /// Changes the [generation] and notifies all listeners.

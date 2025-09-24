@@ -129,8 +129,9 @@ class NumericalAnswerModel extends AnswerModel<String, Quantity> {
       );
       _sliderStepValue = sliderStepValueExtension?.valueDecimal?.value ??
           sliderStepValueExtension?.valueInteger?.value?.toDouble();
-      _sliderDivisions = (_sliderStepValue != null)
-          ? ((_maxValue - _minValue) / _sliderStepValue).round()
+      final sliderStepValue = _sliderStepValue;
+      _sliderDivisions = (sliderStepValue != null)
+          ? ((_maxValue - _minValue) / sliderStepValue).round()
           : null;
 
       _upperSliderLabel = questionnaireItemModel.upperTextItem?.text;

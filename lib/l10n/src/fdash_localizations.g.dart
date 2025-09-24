@@ -102,6 +102,12 @@ abstract class FDashLocalizations {
     Locale('ja')
   ];
 
+  /// No description provided for @errorWrongQuizResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'The answer is incorrect.'**
+  String get errorWrongQuizResponse;
+
   /// No description provided for @validatorRequiredItem.
   ///
   /// In en, this message translates to:
