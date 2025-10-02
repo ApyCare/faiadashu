@@ -46,6 +46,7 @@ class _QuestionnaireStepperPageViewState
   int? _currentItemGeneration;
   Timer? _autoAdvanceTimer;
   QuestionItemModel? _interactionLockedItem;
+  bool _isAutoAdvancing = false;
 
   @override
   void initState() {
@@ -140,6 +141,7 @@ class _QuestionnaireStepperPageViewState
   void _cancelAutoAdvance() {
     _autoAdvanceTimer?.cancel();
     _autoAdvanceTimer = null;
+    _isAutoAdvancing = false;
     _unlockInteraction();
   }
 
@@ -170,7 +172,7 @@ class _QuestionnaireStepperPageViewState
     _interactionLockedItem = null;
   }
 
-  bool _canAutoAdvanceFromCurrentItem() {
+  bool _canAutoAdvanceFromCurrentItem({bool ignoreUserInteraction = false}) {
     final currentItem = _currentFillerItemModel;
     if (currentItem is! ResponseItemModel) {
       return false;
@@ -183,7 +185,11 @@ class _QuestionnaireStepperPageViewState
       return false;
     }
 
-    if (!currentItem.isAnswerable || !currentItem.isUserInteractionAllowed) {
+    if (!currentItem.isAnswerable) {
+      return false;
+    }
+
+    if (!ignoreUserInteraction && !currentItem.isUserInteractionAllowed) {
       return false;
     }
 
@@ -220,13 +226,15 @@ class _QuestionnaireStepperPageViewState
     }
 
     _lockInteraction();
+    _isAutoAdvancing = true;
     _autoAdvanceTimer = Timer(const Duration(milliseconds: 600), () {
       if (!mounted) return;
       _autoAdvanceTimer = null;
 
-      if (!_canAutoAdvanceFromCurrentItem() ||
+      if (!_canAutoAdvanceFromCurrentItem(ignoreUserInteraction: true) ||
           _hasRequestsRunning ||
           _shouldBlockForwardNavigation) {
+        _isAutoAdvancing = false;
         _unlockInteraction();
         return;
       }
@@ -247,7 +255,10 @@ class _QuestionnaireStepperPageViewState
                 _pageController.initialPage)
             : _pageController.initialPage;
         if (currentPage == initialPage) {
+          _isAutoAdvancing = false;
           _unlockInteraction();
+        } else {
+          _isAutoAdvancing = false;
         }
       });
     });
@@ -428,7 +439,9 @@ class QuestionnaireStepperPageViewController {
       return;
     }
 
-    if (_state?.isUserInteractionAllowed() == false) {
+    // Allow navigation during auto-advance even if user interaction is locked
+    if (_state?.isUserInteractionAllowed() == false &&
+        !(_state?._isAutoAdvancing ?? false)) {
       return;
     }
 
