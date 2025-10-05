@@ -431,6 +431,15 @@ class _QuestionnaireStepperPageViewState
 class QuestionnaireStepperPageViewController {
   _QuestionnaireStepperPageViewState? _state;
 
+  /// Gets the current page index.
+  /// Returns 0 if the controller is not attached or the page controller is not initialized.
+  int get currentPage {
+    if (_state?._pageController.hasClients ?? false) {
+      return _state?._pageController.page?.round() ?? 0;
+    }
+    return 0;
+  }
+
   /// Attaches the provided state to this controller.
   /// This internal method is used to establish a connection between the
   /// controller and the `_QuestionnaireStepperPageViewState`.
