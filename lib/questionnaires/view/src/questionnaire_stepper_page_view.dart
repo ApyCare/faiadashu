@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:faiadashu/questionnaires/model/item/src/filler_item_model.dart';
 import 'package:faiadashu/questionnaires/model/item/src/response_item_model.dart';
 import 'package:faiadashu/questionnaires/model/item/src/question_item_model.dart';
+import 'package:faiadashu/questionnaires/model/src/validation_errors/wrong_quiz_response_error.dart';
 import 'package:faiadashu/questionnaires/view/item/src/questionnaire_item_filler.dart';
 import 'package:faiadashu/questionnaires/view/src/questionnaire_filler.dart';
 import 'package:faiadashu/questionnaires/view/src/questionnaire_theme.dart';
@@ -121,6 +122,11 @@ class _QuestionnaireStepperPageViewState
       final newGeneration = fillerModel.questionnaireResponseModel.generation;
       final hasGenerationChanged = _currentItemGeneration != newGeneration;
 
+      // Ensure validation is up-to-date before checking auto-advance eligibility
+      if (fillerModel is QuestionItemModel && isAnsweredNow) {
+        fillerModel.validate(updateErrorText: true, notifyListeners: false);
+      }
+
       if (!_currentItemWasAnswered && isAnsweredNow) {
         _scheduleAutoAdvance();
       } else if (_currentItemWasAnswered && isAnsweredNow && hasGenerationChanged) {
@@ -195,6 +201,14 @@ class _QuestionnaireStepperPageViewState
 
     if (!currentItem.isAnswered) {
       return false;
+    }
+
+    // For quiz questions, only auto-advance if the answer is correct
+    if (currentItem is QuestionItemModel) {
+      final validationError = currentItem.validationError;
+      if (validationError is WrongQuizResponseError) {
+        return false;
+      }
     }
 
     return _hasNextPage();
