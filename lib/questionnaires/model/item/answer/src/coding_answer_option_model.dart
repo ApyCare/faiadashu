@@ -26,6 +26,7 @@ class CodingAnswerOptionModel {
   final FhirDecimal? fhirOrdinalValue;
   final RenderingString? optionPrefix;
   final bool isExclusive;
+  final String? hint;
 
   bool matches(String? otherCode) {
     return (otherCode != null) &&
@@ -42,6 +43,7 @@ class CodingAnswerOptionModel {
     this.fhirOrdinalValue,
     this.optionPrefix,
     this.isExclusive = false,
+    this.hint,
   });
 
   factory CodingAnswerOptionModel.fromValueSetCoding(
@@ -136,6 +138,13 @@ class CodingAnswerOptionModel {
         ? RenderingString.fromText(plainOptionPrefix)
         : null;
 
+    // Extract hint from custom extension
+    final hint = coding?.extension_
+        ?.extensionOrNull(
+          'http://apycare.com/fhir/StructureDefinition/answer-hint',
+        )
+        ?.valueString;
+
     RenderingString optionText;
     String forDisplay;
 
@@ -190,6 +199,7 @@ class CodingAnswerOptionModel {
       isExclusive: isExclusive,
       optionPrefix: optionPrefix,
       itemMedia: itemMedia,
+      hint: hint,
     );
   }
 

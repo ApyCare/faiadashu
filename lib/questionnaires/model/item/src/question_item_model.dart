@@ -213,7 +213,10 @@ class QuestionItemModel extends ResponseItemModel {
           .fold(0, (sum, option) => sum + option.fhirOrdinalValue!.value!);
 
       if (totalScoreOfQuestion == 1 && currentAnswer.answerOptionByUidOrNull(am.singleSelectionUid)?.fhirOrdinalValue != FhirDecimal(1)) {
-        super.validationError = WrongQuizResponseError(nodeUid);
+        // Get the hint from the selected wrong answer option
+        final selectedOption = currentAnswer.answerOptionByUidOrNull(am.singleSelectionUid);
+        final hint = selectedOption?.hint;
+        super.validationError = WrongQuizResponseError(nodeUid, hint: hint);
       }
     }
   }
